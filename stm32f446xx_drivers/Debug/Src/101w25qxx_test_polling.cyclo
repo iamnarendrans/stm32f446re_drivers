@@ -1,0 +1,5 @@
+../Src/101w25qxx_test_polling.c:21:6:SPI2_GPIOInits	1
+../Src/101w25qxx_test_polling.c:52:6:delay	2
+../Src/101w25qxx_test_polling.c:57:6:SPI2_Inits	1
+../Src/101w25qxx_test_polling.c:75:6:inBuild_LED_Init	1
+../Src/101w25qxx_test_polling.c:91:5:main	1

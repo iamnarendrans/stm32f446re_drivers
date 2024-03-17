@@ -18,6 +18,10 @@ uint32_t h_strLen(const char *str)
 	return len;
 }
 
+uint32_t h_arrayLen(const void *arr, size_t element_size) {
+    return sizeof(arr) / element_size;
+}
+
 void h_delay(uint32_t delay_in_S)  // Still pending and needs to be tested
 {
 	static uint32_t SystemClk;

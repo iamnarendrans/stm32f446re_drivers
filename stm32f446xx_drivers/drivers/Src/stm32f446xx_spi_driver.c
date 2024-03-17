@@ -182,8 +182,10 @@ uint8_t SPI_GetFlagStatus(SPI_RegDef_t *pSPIx, uint32_t FlagName)
  *
  * @note								- This is a blocking call / Polling type
  *****************************************************************************************************************/
-void SPI_SendData(SPI_RegDef_t *pSPIx, uint8_t *pTxBuffer, uint32_t Len)
+bool SPI_SendData(SPI_RegDef_t *pSPIx, uint8_t *pTxBuffer, uint32_t Len)
 {
+	bool status = true;
+
 	while(Len > 0)
 	{
 		// 1. Wait until TXE is set
@@ -208,6 +210,13 @@ void SPI_SendData(SPI_RegDef_t *pSPIx, uint8_t *pTxBuffer, uint32_t Len)
 
 		}
 	}
+
+	if(SPI_GetFlagStatus(pSPIx, SPI_TXE_FLAG) != H_OK || SPI_GetFlagStatus(pSPIx, SPI_RXNE_FLAG) != 0)
+	{
+		status = false;
+	}
+
+	return status;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /******************************************************************************************************************
@@ -700,26 +709,35 @@ __weak void SPI_ApplicationEventCallback(SPI_Handle_t *pSPIHandle, uint8_t AppEv
  *
  * @note								- Polling Method
  *****************************************************************************************************************/
-uint8_t SPI_TransmitReceive(SPI_RegDef_t *pSPIx, uint8_t tx_data)
+bool SPI_TransmitReceive(SPI_RegDef_t *pSPIx, uint8_t *tx_data, uint8_t *rx_data, uint8_t len)
 {
-	uint8_t rx_data = 0;
-
+	bool status = true;
 	// Enable SPI
 	// pSPIx->CR1 |= (1 << SPI_CR1_SPE);
 
-	//Write Data and Dummy data byte to the register
-	pSPIx->DR = tx_data;
+    for (uint32_t i = 0; i < (len+1); ++i) {
+        // Write Data to the register
+        pSPIx->DR = tx_data[i];
 
-	// Wait until SPI is not busy and Rx Buffer is not empty
-	while(((pSPIx->SR) & (1 << SPI_SR_BSY)) || (!((pSPIx->SR) & (1 << SPI_SR_RXNE))));
+        // Delay to ensure the SPI transaction completes (adjust as needed)
+        // for(uint32_t j = 0; j < 100; j++);
 
-	// Read a Byte from The Rx Buffer
-	rx_data = (uint8_t)pSPIx->DR;
+        // Wait until SPI is not busy and Rx Buffer is not empty
+        while (((pSPIx->SR) & (1 << SPI_SR_BSY)) || (!((pSPIx->SR) & (1 << SPI_SR_RXNE))));
 
-	// Disable SPI
-	// pSPIx->CR1 &= ~(1 << SPI_CR1_SPE);
+        // Read a Byte from The Rx Buffer
+        rx_data[i] = (uint8_t)pSPIx->DR;
 
-	return rx_data;
+        // Delay to ensure the SPI transaction completes (adjust as needed)
+        // for(uint32_t j = 0; j < 100; j++);
+    }
+
+    if(SPI_GetFlagStatus(pSPIx, SPI_BUSY_FLAG) == 1)
+    {
+    	status = false;
+    }
+
+	return status;
 
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

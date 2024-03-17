@@ -10,7 +10,7 @@
 
 uint32_t h_strLen(const char *str);
 
-uint32_t h_arrayLen(const int *arr);
+uint32_t h_arrayLen(const void *arr, size_t element_size);
 
 void h_delay(uint32_t delay_in_S);
 

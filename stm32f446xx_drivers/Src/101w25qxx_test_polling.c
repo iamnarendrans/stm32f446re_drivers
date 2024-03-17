@@ -91,7 +91,7 @@ void inBuild_LED_Init(void)
 int main(void)
 {
     // uint8_t recvData[6] = {0}; // Array to store received data
-
+	uint8_t id;
 
     // Initialize GPIO pins and SPI2
     SPI2_GPIOInits();
@@ -99,17 +99,16 @@ int main(void)
     SPI_SSOEConfig(SPI2, ENABLE);
 
     // Function to get Flash Chip Manufacturer ID using JEDECID
-    //W25QXX_JEDECID(SPI2, recvData);
+    // id = W25QXX_JEDECID(SPI2);
 
     // Function to get Flash Chip Manufacturer ID
-    // W25QXX_MANUFACT_ID(SPI2, recvData);
+    // id = W25QXX_MANUFACT_ID(SPI2);
 
     // Function to get Flash Chip UID
-    // W25QXX_READ_UID(SPI2, recvData);
+    // id = W25QXX_READ_UID(SPI2);
 
     // Function to enable/disable the write function
-    // writeEnable_Flash();
-    W25QXX_WRITE_CONTROL(SPI2, ENABLE);
+    // W25QXX_WRITE_CONTROL(SPI2, DISABLE);
 
 
     return 0;

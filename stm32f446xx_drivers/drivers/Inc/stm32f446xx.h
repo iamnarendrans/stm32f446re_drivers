@@ -9,6 +9,7 @@
 #define INC_STM32F466XX_H_
 
 #include <stdint.h>
+#include <stdbool.h>
 #include <stddef.h>
 
 #define __vo volatile
@@ -738,6 +739,9 @@ typedef struct{
 #define GPIO_PIN_RESET	RESET
 #define FLAG_RESET		RESET
 #define FLAG_SET		SET
+#define TRUE			ENABLE
+#define FALSE			DISABLE
+#define H_OK			SET
 
 /*****************************************************************************************************************************************/
 /****************************************END:IMPORTANT MACRO DEFINITONS *******************************************************************/

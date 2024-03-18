@@ -11,11 +11,10 @@
 #include "stm32f446xx.h"
 
 
-#define W25QXX_MANUFACTURER_GIGADEVICE	0xC8
+#define W25QXX_MANUFACTURER_GIGADEVICE			((uint8_t)0xC8UL)
 #define W25QXX_MANUFACTURER_WINBOND		0xEF
 
-
-#define W25QXX_DUMMY_BYTE				0xA5
+#define W25QXX_DUMMY_BYTE				0xFF
 #define W25QXX_JEDEC_ID					0x9F
 #define W25QXX_MANUF_ID					0x90
 
@@ -46,21 +45,24 @@
 #define W25QXX_EN_RST					0x66
 #define W25QXX_DEV_RST					0x99
 
+
+#define W25QXX_SIZE_BLOCK_COUNT(SizeInMBIT)		(2 * SizeInMBIT)
+
 #define W25QXX_PAGE_SIZE                      0x100
 #define W25QXX_SECTOR_SIZE                    0x1000
 #define W25QXX_BLOCK_SIZE                     0x10000
 
-#define W25QXX_PageToSector(PageNumber)      ((PageNumber * SPIF_PAGE_SIZE) / SPIF_SECTOR_SIZE)
-#define W25QXX_PageToBlock(PageNumber)       ((PageNumber * SPIF_PAGE_SIZE) / SPIF_BLOCK_SIZE)
-#define W25QXX_SectorToBlock(SectorNumber)   ((SectorNumber * SPIF_SECTOR_SIZE) / SPIF_BLOCK_SIZE)
-#define W25QXX_SectorToPage(SectorNumber)    ((SectorNumber * SPIF_SECTOR_SIZE) / SPIF_PAGE_SIZE)
-#define W25QXX_BlockToPage(BlockNumber)      ((BlockNumber * SPIF_BLOCK_SIZE) / SPIF_PAGE_SIZE)
-#define W25QXX_PageToAddress(PageNumber)     (PageNumber * SPIF_PAGE_SIZE)
-#define W25QXX_SectorToAddress(SectorNumber) (SectorNumber * SPIF_SECTOR_SIZE)
-#define W25QXX_BlockToAddress(BlockNumber)   (BlockNumber * SPIF_BLOCK_SIZE)
-#define W25QXX_AddressToPage(Address)        (Address / SPIF_PAGE_SIZE)
-#define W25QXX_AddressToSector(Address)      (Address / SPIF_SECTOR_SIZE)
-#define W25QXX_AddressToBlock(Address)       (Address / SPIF_BLOCK_SIZE)
+#define W25QXX_PageToSector(PageNumber)      ((PageNumber * W25QXX_PAGE_SIZE) / W25QXX_SECTOR_SIZE)
+#define W25QXX_PageToBlock(PageNumber)       ((PageNumber * W25QXX_PAGE_SIZE) / W25QXX_BLOCK_SIZE)
+#define W25QXX_SectorToBlock(SectorNumber)   ((SectorNumber * W25QXX_SECTOR_SIZE) / W25QXX_BLOCK_SIZE)
+#define W25QXX_SectorToPage(SectorNumber)    ((SectorNumber * W25QXX_SECTOR_SIZE) / W25QXX_PAGE_SIZE)
+#define W25QXX_BlockToPage(BlockNumber)      ((BlockNumber * W25QXX_BLOCK_SIZE) / W25QXX_PAGE_SIZE)
+#define W25QXX_PageToAddress(PageNumber)     (PageNumber * W25QXX_PAGE_SIZE)
+#define W25QXX_SectorToAddress(SectorNumber) (SectorNumber * W25QXX_SECTOR_SIZE)
+#define W25QXX_BlockToAddress(BlockNumber)   (BlockNumber * W25QXX_BLOCK_SIZE)
+#define W25QXX_AddressToPage(Address)        (Address / W25QXX_PAGE_SIZE)
+#define W25QXX_AddressToSector(Address)      (Address / W25QXX_SECTOR_SIZE)
+#define W25QXX_AddressToBlock(Address)       (Address / W25QXX_BLOCK_SIZE)
 
 
 #define W25QXX_STATUS1_BUSY		(1 << 0)
@@ -90,21 +92,42 @@
 #define W25QXX_STATUS3_DRV1 	(1 << 22)
 #define W25QXX_STATUS3_RESERVE5 (1 << 23)
 
+typedef struct
+{
+	SPI_RegDef_t	*hSPIx;
+	uint8_t			Manufacturer;
+	uint8_t			memType;
+	uint8_t			size;
+	uint8_t			initialized;
+	uint32_t		pageCnt;
+	uint32_t		sectorCnt;
+	uint32_t		blockCnt;
 
-uint8_t W25QXX_JEDECID(SPI_RegDef_t *pSPIx);
+}W25QXX_HandleTypeDef;
+
+
+bool W25QXX_JEDECID(W25QXX_HandleTypeDef *handle);
 
 uint8_t W25QXX_MANUFACT_ID(SPI_RegDef_t *pSPIx);
 
 uint8_t W25QXX_READ_UID(SPI_RegDef_t *pSPIx);
 
-void W25QXX_WRITE_CONTROL(SPI_RegDef_t *pSPIx, uint8_t EnorDn);
 
-void W25QXX_VOL_WRITE_EN(SPI_RegDef_t *pSPIx);
+void W25QXX_CS_PinControl(W25QXX_HandleTypeDef *handle, uint8_t EnorDn);
+
+bool W25QXX_WRITE_CONTROL(W25QXX_HandleTypeDef *handle, uint8_t EnorDn);
 
 uint8_t  W25QXX_ReadReg1(SPI_RegDef_t *pSPIx);
 uint8_t  W25QXX_ReadReg2(SPI_RegDef_t *pSPIx);
 uint8_t  W25QXX_ReadReg3(SPI_RegDef_t *pSPIx);
 
+bool W25QXX_WriteReg1(SPI_RegDef_t *pSPIx, uint8_t data);
+bool W25QXX_WriteReg2(SPI_RegDef_t *pSPIx, uint8_t data);
+bool W25QXX_WriteReg3(SPI_RegDef_t *pSPIx, uint8_t data);
+
+bool W25QXX_WaitForWrite(SPI_RegDef_t *pSPIx); // Write timerbased in future After done with timer peripheral
+
+bool W25QXX_Init(W25QXX_HandleTypeDef *handle, SPI_RegDef_t *pSPIx);
 
 
 

@@ -18,6 +18,7 @@
  * ALT Function Mode - 5
  */
 
+
 void SPI2_GPIOInits(void){
 
 	GPIO_Handle_t SPIPins;
@@ -91,12 +92,20 @@ void inBuild_LED_Init(void)
 int main(void)
 {
     // uint8_t recvData[6] = {0}; // Array to store received data
-	uint8_t id;
+	// uint8_t id = 0x0A;
+	bool status;
+	W25QXX_HandleTypeDef w25q;
 
     // Initialize GPIO pins and SPI2
     SPI2_GPIOInits();
     SPI2_Inits();
     SPI_SSOEConfig(SPI2, ENABLE);
+
+//    SPI_PeripheralControl(SPI2, ENABLE);
+//
+//    status = SPI_SendData(SPI2, (uint8_t)"NAREN", 5);
+//
+//    SPI_PeripheralControl(SPI2, DISABLE);
 
     // Function to get Flash Chip Manufacturer ID using JEDECID
     // id = W25QXX_JEDECID(SPI2);
@@ -110,6 +119,11 @@ int main(void)
     // Function to enable/disable the write function
     // W25QXX_WRITE_CONTROL(SPI2, DISABLE);
 
+    // Function to Read Read SR1
+    // W25QXX_ReadReg1(SPI2);
+
+    // Function to Write Write SR1
+    status = W25QXX_Init(&w25q, SPI2);
 
     return 0;
 }

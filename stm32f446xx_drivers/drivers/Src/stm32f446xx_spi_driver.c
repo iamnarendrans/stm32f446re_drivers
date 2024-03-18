@@ -184,7 +184,7 @@ uint8_t SPI_GetFlagStatus(SPI_RegDef_t *pSPIx, uint32_t FlagName)
  *****************************************************************************************************************/
 bool SPI_SendData(SPI_RegDef_t *pSPIx, uint8_t *pTxBuffer, uint32_t Len)
 {
-	bool status = true;
+	bool status = false;
 
 	while(Len > 0)
 	{
@@ -213,7 +213,7 @@ bool SPI_SendData(SPI_RegDef_t *pSPIx, uint8_t *pTxBuffer, uint32_t Len)
 
 	if(SPI_GetFlagStatus(pSPIx, SPI_TXE_FLAG) != H_OK || SPI_GetFlagStatus(pSPIx, SPI_RXNE_FLAG) != 0)
 	{
-		status = false;
+		status = true;
 	}
 
 	return status;
@@ -715,7 +715,7 @@ bool SPI_TransmitReceive(SPI_RegDef_t *pSPIx, uint8_t *tx_data, uint8_t *rx_data
 	// Enable SPI
 	// pSPIx->CR1 |= (1 << SPI_CR1_SPE);
 
-    for (uint32_t i = 0; i < (len+1); ++i) {
+    for (uint32_t i = 0; i < (len); ++i) {
         // Write Data to the register
         pSPIx->DR = tx_data[i];
 

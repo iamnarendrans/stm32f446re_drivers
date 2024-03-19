@@ -52,56 +52,56 @@ bool W25QXX_JEDECID(W25QXX_HandleTypeDef *handle)
 
 }
 
-uint8_t W25QXX_MANUFACT_ID(SPI_RegDef_t *pSPIx)
+uint8_t W25QXX_MANUFACT_ID(W25QXX_HandleTypeDef *handle)
 {
 	// Message ID to get Manufacturer ID
 	uint8_t tx[5] = {W25QXX_MANUF_ID, W25QXX_DUMMY_BYTE, W25QXX_DUMMY_BYTE, 0x00, W25QXX_DUMMY_BYTE, W25QXX_DUMMY_BYTE};	// Array of Requesting Bytes
 	uint8_t rx[5] = {0};
 	uint8_t recvData = 0;
-	SPI_PeripheralControl(pSPIx, ENABLE);
+	SPI_PeripheralControl(handle->hSPIx, ENABLE);
 
-	if(SPI_TransmitReceive(pSPIx, tx, rx, 5) == H_OK)
+	if(SPI_TransmitReceive(handle->hSPIx, tx, rx, 5) == H_OK)
 	{
 		recvData = rx[4];
 
 		// Delay to ensure the SPI transaction completes (adjust as needed)
 		for(uint32_t j = 0; j < 1000; j++);
 
-		SPI_PeripheralControl(pSPIx, DISABLE);
+		SPI_PeripheralControl(handle->hSPIx, DISABLE);
 
 		return recvData;
 
 	}
 
-    SPI_PeripheralControl(SPI2, DISABLE);
+    SPI_PeripheralControl(handle->hSPIx, DISABLE);
 
     return recvData;
 
 }
 
 
-uint8_t W25QXX_READ_UID(SPI_RegDef_t *pSPIx)
+uint8_t W25QXX_READ_UID(W25QXX_HandleTypeDef *handle)
 {
 	// Message ID to get Manufacturer ID
 	uint8_t tx[6] = {W25QXX_UID_READ, W25QXX_DUMMY_BYTE, W25QXX_DUMMY_BYTE, 0x00, W25QXX_DUMMY_BYTE, W25QXX_DUMMY_BYTE};	// Array of Requesting Bytes
 	uint8_t rx[6] = {0};
 	uint8_t recvData = 0;
-	SPI_PeripheralControl(pSPIx, ENABLE);
+	SPI_PeripheralControl(handle->hSPIx, ENABLE);
 
-	if(SPI_TransmitReceive(pSPIx, tx, rx, 5) == H_OK)
+	if(SPI_TransmitReceive(handle->hSPIx, tx, rx, 5) == H_OK)
 	{
 		recvData = rx[5];
 
 		// Delay to ensure the SPI transaction completes (adjust as needed)
 		for(uint32_t j = 0; j < 1000; j++);
 
-		SPI_PeripheralControl(pSPIx, DISABLE);
+		SPI_PeripheralControl(handle->hSPIx, DISABLE);
 
 		return recvData;
 
 	}
 
-    SPI_PeripheralControl(SPI2, DISABLE);
+    SPI_PeripheralControl(handle->hSPIx, DISABLE);
 
     return recvData;
 
@@ -159,65 +159,65 @@ bool W25QXX_WRITE_CONTROL(W25QXX_HandleTypeDef *handle, uint8_t EnorDn)
 
 }
 
-uint8_t  W25QXX_ReadReg1(SPI_RegDef_t *pSPIx)
+uint8_t  W25QXX_ReadReg1(W25QXX_HandleTypeDef *handle)
 {
 	uint8_t retVal = 0;
 	uint8_t tx[2] = {W25QXX_READ_SR1, W25QXX_DUMMY_BYTE};
 	uint8_t rx[2] = {0};
 
-	SPI_PeripheralControl(pSPIx, ENABLE);
+	SPI_PeripheralControl(handle->hSPIx, ENABLE);
 
-	if(SPI_TransmitReceive(pSPIx, tx, rx, 2) == H_OK)
+	if(SPI_TransmitReceive(handle->hSPIx, tx, rx, 2) == H_OK)
 	{
 		retVal = rx[1];
 	}
 
-	SPI_PeripheralControl(pSPIx, DISABLE);
+	SPI_PeripheralControl(handle->hSPIx, DISABLE);
 
 	return retVal;
 
 }
 
-uint8_t  W25QXX_ReadReg2(SPI_RegDef_t *pSPIx)
+uint8_t  W25QXX_ReadReg2(W25QXX_HandleTypeDef *handle)
 {
 	uint8_t retVal = 0;
 	uint8_t tx[2] = {W25QXX_READ_SR2, W25QXX_DUMMY_BYTE};
 	uint8_t rx[2] = {0};
 
-	SPI_PeripheralControl(pSPIx, ENABLE);
+	SPI_PeripheralControl(handle->hSPIx, ENABLE);
 
-	if(SPI_TransmitReceive(pSPIx, tx, rx, 2) == H_OK)
+	if(SPI_TransmitReceive(handle->hSPIx, tx, rx, 2) == H_OK)
 	{
 		retVal = rx[1];
 	}
 
-	SPI_PeripheralControl(pSPIx, DISABLE);
+	SPI_PeripheralControl(handle->hSPIx, DISABLE);
 
 	return retVal;
 
 }
 
 
-uint8_t  W25QXX_ReadReg3(SPI_RegDef_t *pSPIx)
+uint8_t  W25QXX_ReadReg3(W25QXX_HandleTypeDef *handle)
 {
 	uint8_t retVal = 0;
 	uint8_t tx[2] = {W25QXX_READ_SR3, W25QXX_DUMMY_BYTE};
 	uint8_t rx[2] = {0};
 
-	SPI_PeripheralControl(pSPIx, ENABLE);
+	SPI_PeripheralControl(handle->hSPIx, ENABLE);
 
-	if(SPI_TransmitReceive(pSPIx, tx, rx, 2) == H_OK)
+	if(SPI_TransmitReceive(handle->hSPIx, tx, rx, 2) == H_OK)
 	{
 		retVal = rx[1];
 	}
 
-	SPI_PeripheralControl(pSPIx, DISABLE);
+	SPI_PeripheralControl(handle->hSPIx, DISABLE);
 
 	return retVal;
 
 }
 
-bool W25QXX_WriteReg1(SPI_RegDef_t *pSPIx, uint8_t data)
+bool W25QXX_WriteReg1(W25QXX_HandleTypeDef *handle, uint8_t data)
 {
 	bool status = true;
 	uint8_t tx[2] = {W25QXX_WRITE_SR1, data};
@@ -225,30 +225,30 @@ bool W25QXX_WriteReg1(SPI_RegDef_t *pSPIx, uint8_t data)
 
 	do
 	{
-		SPI_PeripheralControl(pSPIx, ENABLE);
+		SPI_PeripheralControl(handle->hSPIx, ENABLE);
 
-		if(SPI_SendData(pSPIx, &cmd, 1) != H_OK)
+		if(SPI_SendData(handle->hSPIx, &cmd, 1) != H_OK)
 		{
 			status = false;
-			SPI_PeripheralControl(pSPIx, DISABLE);
+			SPI_PeripheralControl(handle->hSPIx, DISABLE);
 			break;
 		}
 
-		if(SPI_SendData(pSPIx, tx, 2) != H_OK)
+		if(SPI_SendData(handle->hSPIx, tx, 2) != H_OK)
 		{
 			status = false;
-			SPI_PeripheralControl(pSPIx, DISABLE);
+			SPI_PeripheralControl(handle->hSPIx, DISABLE);
 			break;
 
 		}
-		SPI_PeripheralControl(pSPIx, DISABLE);
+		SPI_PeripheralControl(handle->hSPIx, DISABLE);
 
 	}
 	while(0);
 
 	return status;
 }
-bool W25QXX_WriteReg2(SPI_RegDef_t *pSPIx, uint8_t data)
+bool W25QXX_WriteReg2(W25QXX_HandleTypeDef *handle, uint8_t data)
 {
 	bool status = true;
 	uint8_t tx[2] = {W25QXX_WRITE_SR2, data};
@@ -256,23 +256,23 @@ bool W25QXX_WriteReg2(SPI_RegDef_t *pSPIx, uint8_t data)
 
 	do
 	{
-		SPI_PeripheralControl(pSPIx, ENABLE);
+		SPI_PeripheralControl(handle->hSPIx, ENABLE);
 
-		if(SPI_SendData(pSPIx, &cmd, 1) != H_OK)
+		if(SPI_SendData(handle->hSPIx, &cmd, 1) != H_OK)
 		{
 			status = false;
-			SPI_PeripheralControl(pSPIx, DISABLE);
+			SPI_PeripheralControl(handle->hSPIx, DISABLE);
 			break;
 		}
 
-		if(SPI_SendData(pSPIx, tx, 2) != H_OK)
+		if(SPI_SendData(handle->hSPIx, tx, 2) != H_OK)
 		{
 			status = false;
-			SPI_PeripheralControl(pSPIx, DISABLE);
+			SPI_PeripheralControl(handle->hSPIx, DISABLE);
 			break;
 
 		}
-		SPI_PeripheralControl(pSPIx, DISABLE);
+		SPI_PeripheralControl(handle->hSPIx, DISABLE);
 
 	}
 	while(0);
@@ -280,7 +280,7 @@ bool W25QXX_WriteReg2(SPI_RegDef_t *pSPIx, uint8_t data)
 	return status;
 }
 
-bool W25QXX_WriteReg3(SPI_RegDef_t *pSPIx, uint8_t data)
+bool W25QXX_WriteReg3(W25QXX_HandleTypeDef *handle, uint8_t data)
 {
 	bool status = true;
 	uint8_t tx[2] = {W25QXX_WRITE_SR3, data};
@@ -288,23 +288,23 @@ bool W25QXX_WriteReg3(SPI_RegDef_t *pSPIx, uint8_t data)
 
 	do
 	{
-		SPI_PeripheralControl(pSPIx, ENABLE);
+		SPI_PeripheralControl(handle->hSPIx, ENABLE);
 
-		if(SPI_SendData(pSPIx, &cmd, 1) != H_OK)
+		if(SPI_SendData(handle->hSPIx, &cmd, 1) != H_OK)
 		{
 			status = false;
-			SPI_PeripheralControl(pSPIx, DISABLE);
+			SPI_PeripheralControl(handle->hSPIx, DISABLE);
 			break;
 		}
 
-		if(SPI_SendData(pSPIx, tx, 2) != H_OK)
+		if(SPI_SendData(handle->hSPIx, tx, 2) != H_OK)
 		{
 			status = false;
-			SPI_PeripheralControl(pSPIx, DISABLE);
+			SPI_PeripheralControl(handle->hSPIx, DISABLE);
 			break;
 
 		}
-		SPI_PeripheralControl(pSPIx, DISABLE);
+		SPI_PeripheralControl(handle->hSPIx, DISABLE);
 
 	}
 	while(0);
@@ -313,7 +313,7 @@ bool W25QXX_WriteReg3(SPI_RegDef_t *pSPIx, uint8_t data)
 }
 
 
-bool W25QXX_WaitForWrite(SPI_RegDef_t *pSPIx) // Write timerbased in future After done with timer peripheral
+bool W25QXX_WaitForWrite(W25QXX_HandleTypeDef *handle) // Write timerbased in future After done with timer peripheral
 {
 	bool status;
 
@@ -323,7 +323,7 @@ bool W25QXX_WaitForWrite(SPI_RegDef_t *pSPIx) // Write timerbased in future Afte
 		 * Write one more if condition by passing timeout, after timer concepts done.
 		 */
 
-		if((W25QXX_ReadReg1(pSPIx) & W25QXX_STATUS1_BUSY) == 0)
+		if((W25QXX_ReadReg1(handle->hSPIx) & W25QXX_STATUS1_BUSY) == 0)
 		{
 			status = true;
 			break;

@@ -108,24 +108,24 @@ typedef struct
 
 bool W25QXX_JEDECID(W25QXX_HandleTypeDef *handle);
 
-uint8_t W25QXX_MANUFACT_ID(SPI_RegDef_t *pSPIx);
+uint8_t W25QXX_MANUFACT_ID(W25QXX_HandleTypeDef *handle);
 
-uint8_t W25QXX_READ_UID(SPI_RegDef_t *pSPIx);
+uint8_t W25QXX_READ_UID(W25QXX_HandleTypeDef *handle);
 
 
 void W25QXX_CS_PinControl(W25QXX_HandleTypeDef *handle, uint8_t EnorDn);
 
 bool W25QXX_WRITE_CONTROL(W25QXX_HandleTypeDef *handle, uint8_t EnorDn);
 
-uint8_t  W25QXX_ReadReg1(SPI_RegDef_t *pSPIx);
-uint8_t  W25QXX_ReadReg2(SPI_RegDef_t *pSPIx);
-uint8_t  W25QXX_ReadReg3(SPI_RegDef_t *pSPIx);
+uint8_t  W25QXX_ReadReg1(W25QXX_HandleTypeDef *handle);
+uint8_t  W25QXX_ReadReg2(W25QXX_HandleTypeDef *handle);
+uint8_t  W25QXX_ReadReg3(W25QXX_HandleTypeDef *handle);
 
-bool W25QXX_WriteReg1(SPI_RegDef_t *pSPIx, uint8_t data);
-bool W25QXX_WriteReg2(SPI_RegDef_t *pSPIx, uint8_t data);
-bool W25QXX_WriteReg3(SPI_RegDef_t *pSPIx, uint8_t data);
+bool W25QXX_WriteReg1(W25QXX_HandleTypeDef *handle, uint8_t data);
+bool W25QXX_WriteReg2(W25QXX_HandleTypeDef *handle, uint8_t data);
+bool W25QXX_WriteReg3(W25QXX_HandleTypeDef *handle, uint8_t data);
 
-bool W25QXX_WaitForWrite(SPI_RegDef_t *pSPIx); // Write timerbased in future After done with timer peripheral
+bool W25QXX_WaitForWrite(W25QXX_HandleTypeDef *handle); // Write timerbased in future After done with timer peripheral
 
 bool W25QXX_Init(W25QXX_HandleTypeDef *handle, SPI_RegDef_t *pSPIx);
 

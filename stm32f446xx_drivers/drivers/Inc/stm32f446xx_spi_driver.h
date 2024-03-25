@@ -155,11 +155,9 @@ uint8_t SPI_GetFlagStatus(SPI_RegDef_t *pSPIx, uint32_t FlagName);		/*! GET SPI 
 
 bool SPI_SendData(SPI_RegDef_t *pSPIx, uint8_t *pTxBuffer, uint32_t Len);		/*! SPIx Send Data API*/
 
-uint8_t SPI_SendDataTest(SPI_RegDef_t *pSPIx, uint8_t *pTxBuffer, uint32_t Len);
-
 void SPI_ReceiveData(SPI_RegDef_t *pSPIx,uint8_t *pRxBuffer, uint32_t Len);		/*! SPIx Receive Data API*/
 
-bool SPI_TransmitReceive(SPI_RegDef_t *pSPIx,uint8_t *tx_data, uint8_t *rx_data, uint8_t len);									/*! SPIx Tx and Rx DAta API*/
+bool SPI_TransmitReceive(SPI_RegDef_t *pSPIx,uint8_t *tx_data, uint8_t *rx_data, uint8_t len);	/*! SPIx Transmit and receive byte in a single function */								/*! SPIx Tx and Rx DAta API*/
 
 uint8_t SPI_SendDataIT(SPI_Handle_t *pSPIHandle, uint8_t *pTxBuffer, uint32_t Len);/*! SPIx Send Data Interrupt API*/
 

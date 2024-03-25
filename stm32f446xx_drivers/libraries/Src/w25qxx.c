@@ -9,7 +9,16 @@
 #include "w25qxx.h"
 #include "helper.h"
 
-
+/******************************************************************************************************************
+ * @fn									- W25QXX_JEDECID
+ *
+ * @brief								- This function to get the W25QXX_Flash Manufacturer ID and memory type
+ * @param[W25QXX_HandleTypeDef *handle]	- Handle structure of the W25QXX_Flash
+ *
+ * @return								- Status of the function like true/false
+ *
+ * @note								- None
+ *****************************************************************************************************************/
 bool W25QXX_JEDECID(W25QXX_HandleTypeDef *handle)
 {
 	bool status = false;
@@ -36,22 +45,34 @@ bool W25QXX_JEDECID(W25QXX_HandleTypeDef *handle)
 
 		}
 
-	    SPI_PeripheralControl(handle->hSPIx, DISABLE);
+		SPI_PeripheralControl(handle->hSPIx, DISABLE);
 
-	    handle->Manufacturer = rx[1];
-	    handle->memType = rx[2];
-	    handle->size = rx[3];
-	    handle->blockCnt = W25QXX_SIZE_BLOCK_COUNT(128);
-	    handle->sectorCnt = handle->blockCnt * 16;
-	    handle->pageCnt = (handle->sectorCnt * W25QXX_SECTOR_SIZE) / W25QXX_PAGE_SIZE;
-	    status = true;
+		handle->Manufacturer = rx[1];
+		handle->memType = rx[2];
+		handle->size = rx[3];
+		handle->blockCnt = W25QXX_SIZE_BLOCK_COUNT(128);
+		handle->sectorCnt = handle->blockCnt * 16;
+		handle->pageCnt = (handle->sectorCnt * W25QXX_SECTOR_SIZE) / W25QXX_PAGE_SIZE;
+		status = true;
 
 	}while(0);
 
-    return status;
+	return status;
 
 }
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/******************************************************************************************************************/
+/******************************************************************************************************************
+ * @fn									- W25QXX_MANUFACT_ID
+ *
+ * @brief								- This function to get the W25QXX_Flash Manufacturer ID
+ *
+ * @param[W25QXX_HandleTypeDef *handle]	- Handle structure of the W25QXX_Flash
+ *
+ * @return								- Status of the function like true/false
+ *
+ * @note								- None
+ *****************************************************************************************************************/
 uint8_t W25QXX_MANUFACT_ID(W25QXX_HandleTypeDef *handle)
 {
 	// Message ID to get Manufacturer ID
@@ -73,13 +94,24 @@ uint8_t W25QXX_MANUFACT_ID(W25QXX_HandleTypeDef *handle)
 
 	}
 
-    SPI_PeripheralControl(handle->hSPIx, DISABLE);
+	SPI_PeripheralControl(handle->hSPIx, DISABLE);
 
-    return recvData;
+	return recvData;
 
 }
-
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/******************************************************************************************************************/
+/******************************************************************************************************************
+ * @fn									- W25QXX_READ_UID
+ *
+ * @brief								- This function to get the W25QXX_Flash Unique ID
+ *
+ * @param[W25QXX_HandleTypeDef *handle]	- Handle structure of the W25QXX_Flash
+ *
+ * @return								- Status of the function like true/false
+ *
+ * @note								- None
+ *****************************************************************************************************************/
 uint8_t W25QXX_READ_UID(W25QXX_HandleTypeDef *handle)
 {
 	// Message ID to get Manufacturer ID
@@ -101,12 +133,25 @@ uint8_t W25QXX_READ_UID(W25QXX_HandleTypeDef *handle)
 
 	}
 
-    SPI_PeripheralControl(handle->hSPIx, DISABLE);
+	SPI_PeripheralControl(handle->hSPIx, DISABLE);
 
-    return recvData;
+	return recvData;
 
 }
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/******************************************************************************************************************/
+/******************************************************************************************************************
+ * @fn									- W25QXX_WRITE_CONTROL
+ *
+ * @brief								- This function to enable flash write and disable flash write
+ *
+ * @param[W25QXX_HandleTypeDef *handle]	- Handle structure of the W25QXX_Flash
+ * @param[uint8_t EnorDn]				- Enable/Disable Bit
+ *
+ * @return								- Status of the function like true/false
+ *
+ * @note								- None
+ *****************************************************************************************************************/
 bool W25QXX_WRITE_CONTROL(W25QXX_HandleTypeDef *handle, uint8_t EnorDn)
 {
 	bool status = false;
@@ -158,7 +203,19 @@ bool W25QXX_WRITE_CONTROL(W25QXX_HandleTypeDef *handle, uint8_t EnorDn)
 	return status;
 
 }
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/******************************************************************************************************************/
+/******************************************************************************************************************
+ * @fn									- W25QXX_ReadReg1
+ *
+ * @brief								- This function to Read register 1
+ *
+ * @param[W25QXX_HandleTypeDef *handle]	- Handle structure of the W25QXX_Flash
+ *
+ * @return								- Status of the function like true/false
+ *
+ * @note								- None
+ *****************************************************************************************************************/
 uint8_t  W25QXX_ReadReg1(W25QXX_HandleTypeDef *handle)
 {
 	uint8_t retVal = 0;
@@ -177,7 +234,19 @@ uint8_t  W25QXX_ReadReg1(W25QXX_HandleTypeDef *handle)
 	return retVal;
 
 }
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/******************************************************************************************************************/
+/******************************************************************************************************************
+ * @fn									- W25QXX_ReadReg2
+ *
+ * @brief								- This function to Read register 2
+ *
+ * @param[W25QXX_HandleTypeDef *handle]	- Handle structure of the W25QXX_Flash
+ *
+ * @return								- Status of the function like true/false
+ *
+ * @note								- None
+ *****************************************************************************************************************/
 uint8_t  W25QXX_ReadReg2(W25QXX_HandleTypeDef *handle)
 {
 	uint8_t retVal = 0;
@@ -196,8 +265,19 @@ uint8_t  W25QXX_ReadReg2(W25QXX_HandleTypeDef *handle)
 	return retVal;
 
 }
-
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/******************************************************************************************************************/
+/******************************************************************************************************************
+ * @fn									- W25QXX_ReadReg3
+ *
+ * @brief								- This function to Read register 3
+ *
+ * @param[W25QXX_HandleTypeDef *handle]	- Handle structure of the W25QXX_Flash
+ *
+ * @return								- Status of the function like true/false
+ *
+ * @note								- None
+ *****************************************************************************************************************/
 uint8_t  W25QXX_ReadReg3(W25QXX_HandleTypeDef *handle)
 {
 	uint8_t retVal = 0;
@@ -216,7 +296,20 @@ uint8_t  W25QXX_ReadReg3(W25QXX_HandleTypeDef *handle)
 	return retVal;
 
 }
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/******************************************************************************************************************/
+/******************************************************************************************************************
+ * @fn									- W25QXX_WriteReg1
+ *
+ * @brief								- This function to write register 1
+ *
+ * @param[W25QXX_HandleTypeDef *handle]	- Handle structure of the W25QXX_Flash
+ * @param[uint8_t data]					- Byte to be written in the write register 1
+ *
+ * @return								- Status of the function like true/false
+ *
+ * @note								- None
+ *****************************************************************************************************************/
 bool W25QXX_WriteReg1(W25QXX_HandleTypeDef *handle, uint8_t data)
 {
 	bool status = true;
@@ -248,6 +341,20 @@ bool W25QXX_WriteReg1(W25QXX_HandleTypeDef *handle, uint8_t data)
 
 	return status;
 }
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/******************************************************************************************************************/
+/******************************************************************************************************************
+ * @fn									- W25QXX_WriteReg2
+ *
+ * @brief								- This function to write register 2
+ *
+ * @param[W25QXX_HandleTypeDef *handle]	- Handle structure of the W25QXX_Flash
+ * @param[uint8_t data]					- Byte to be written in the write register 2
+ *
+ * @return								- Status of the function like true/false
+ *
+ * @note								- None
+ *****************************************************************************************************************/
 bool W25QXX_WriteReg2(W25QXX_HandleTypeDef *handle, uint8_t data)
 {
 	bool status = true;
@@ -279,7 +386,20 @@ bool W25QXX_WriteReg2(W25QXX_HandleTypeDef *handle, uint8_t data)
 
 	return status;
 }
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/******************************************************************************************************************/
+/******************************************************************************************************************
+ * @fn									- W25QXX_WriteReg3
+ *
+ * @brief								- This function to write register 3
+ *
+ * @param[W25QXX_HandleTypeDef *handle]	- Handle structure of the W25QXX_Flash
+ * @param[uint8_t data]					- Byte to be written in the write register 3
+ *
+ * @return								- Status of the function like true/false
+ *
+ * @note								- None
+ *****************************************************************************************************************/
 bool W25QXX_WriteReg3(W25QXX_HandleTypeDef *handle, uint8_t data)
 {
 	bool status = true;
@@ -311,8 +431,20 @@ bool W25QXX_WriteReg3(W25QXX_HandleTypeDef *handle, uint8_t data)
 
 	return status;
 }
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/******************************************************************************************************************/
 
-
+/******************************************************************************************************************
+ * @fn									- W25QXX_WaitForWrite
+ *
+ * @brief								- This function will wait until the Status register get free from busy
+ *
+ * @param[W25QXX_HandleTypeDef *handle]	- Handle structure of the W25QXX_Flash
+ *
+ * @return								- Return status of the function like true/false
+ *
+ * @note								- None
+ *****************************************************************************************************************/
 bool W25QXX_WaitForWrite(W25QXX_HandleTypeDef *handle) // Write timerbased in future After done with timer peripheral
 {
 	bool status;
@@ -333,13 +465,37 @@ bool W25QXX_WaitForWrite(W25QXX_HandleTypeDef *handle) // Write timerbased in fu
 
 	return status;
 }
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/******************************************************************************************************************/
+/******************************************************************************************************************
+ * @fn									- W25QXX_CS_PinControl
+ *
+ * @brief								- This function controls the SPI peripheral for enabling/disabling CS Pin
+ *
+ * @param[W25QXX_HandleTypeDef *handle]	- Handle structure of the W25QXX_Flash
+ *
+ * @return								- None
+ *
+ * @note								- None
+ *****************************************************************************************************************/
 void W25QXX_CS_PinControl(W25QXX_HandleTypeDef *handle, uint8_t EnorDn)
 {
 	SPI_PeripheralControl(handle->hSPIx, EnorDn);
 	for(uint8_t i = 0; i<10; i++);
 }
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/******************************************************************************************************************/
+/******************************************************************************************************************
+ * @fn									- W25QXX_Init
+ *
+ * @brief								- This function will initialize the W25QXX Flash module
+ * @param[W25QXX_HandleTypeDef *handle]	- Handle structure of the W25QXX_Flash
+ * @param[SPI_RegDef_t *pSPIx]			- Base Address of the SPIx Peripheralral
+ *
+ * @return								- Return status of the function like true/false
+ *
+ * @note								- None
+ *****************************************************************************************************************/
 bool W25QXX_Init(W25QXX_HandleTypeDef *handle, SPI_RegDef_t *pSPIx)
 {
 	bool status = false;
@@ -354,12 +510,12 @@ bool W25QXX_Init(W25QXX_HandleTypeDef *handle, SPI_RegDef_t *pSPIx)
 
 		/* Write one timer based check for stable VCC */
 
-//		if(W25QXX_WRITE_CONTROL(handle, DISABLE) == false)
-//		{
-//			break;
-//		}
-//
-//		for(uint8_t i = 0; i < 100; i++); // Giving some delay
+		//		if(W25QXX_WRITE_CONTROL(handle, DISABLE) == false)
+		//		{
+		//			break;
+		//		}
+		//
+		//		for(uint8_t i = 0; i < 100; i++); // Giving some delay
 
 		status = W25QXX_JEDECID(handle);
 
@@ -373,4 +529,74 @@ bool W25QXX_Init(W25QXX_HandleTypeDef *handle, SPI_RegDef_t *pSPIx)
 	}while(0);
 
 	return status;
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/******************************************************************************************************************/
+bool W25QXX_Write(W25QXX_HandleTypeDef *handle, uint32_t pageNumber, uint8_t *data, uint32_t size, uint32_t Offset)
+{
+	bool status = false;
+	uint32_t address = 0, maximum = W25QXX_PAGE_SIZE - Offset;
+	uint8_t tx[5];
+	do
+	{
+		if(pageNumber >= handle->pageCnt)
+		{
+			break; // Write Enum based fault status
+		}
+		if(Offset >= W25QXX_PAGE_SIZE)
+		{
+			break; // Write Enum based fault status
+		}
+		if(size >maximum)
+		{
+			size = maximum;
+		}
+		address = W25QXX_PageToAddress(pageNumber) + Offset;
+
+		if(W25QXX_WRITE_CONTROL(handle, ENABLE) == false)
+		{
+			break; // Write Enum based fault status
+		}
+		W25QXX_CS_PinControl(handle, ENABLE);
+		if(handle->blockCnt >= 512)
+		{
+			tx[0] = W25QXX_PAGE_PROGRAM_4ADD;
+			tx[1] = (address & 0xFF000000) >> 24;
+			tx[2] = (address & 0x00FF0000) >> 16;
+			tx[3] = (address & 0x0000FF00) >> 8;
+			tx[4] = (address & 0x000000FF);
+
+			if(SPI_SendData(handle->hSPIx, tx, 5) == false)
+			{
+				W25QXX_CS_PinControl(handle, DISABLE);
+				break;
+			}
+		}
+		else
+		{
+			tx[0] = W25QXX_PAGE_PROGRAM_3ADD;
+			tx[1] = (address & 0x00FF0000) >> 16;
+			tx[2] = (address & 0x0000FF00) >> 8;
+			tx[3] = (address & 0x000000FF);
+
+			if(SPI_SendData(handle->hSPIx, tx, 4) == false)
+			{
+				W25QXX_CS_PinControl(handle, DISABLE);
+				break;
+			}
+		}
+		if(SPI_SendData(handle->hSPIx, data, size) == false)
+		{
+			W25QXX_CS_PinControl(handle, DISABLE);
+			break;
+		}
+		W25QXX_CS_PinControl(handle, DISABLE);
+		if(W25QXX_WaitForWrite(handle))
+		{
+			status = true;
+		}
+	}
+	while(0);
+
+	W25QXX_WRITE_CONTROL(handle, DISABLE);
 }

@@ -92,7 +92,7 @@ void inBuild_LED_Init(void)
 int main(void)
 {
     // uint8_t recvData[6] = {0}; // Array to store received data
-	// uint8_t id = 0x0A;
+	uint8_t id = 0x0A;
 	bool status;
 	W25QXX_HandleTypeDef w25q;
 
@@ -124,6 +124,8 @@ int main(void)
 
     // Function to Write Write SR1
     status = W25QXX_Init(&w25q, SPI2);
+
+    W25QXX_Write(&w25q, 1, id, 1, 5);
 
     return 0;
 }

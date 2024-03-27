@@ -103,6 +103,8 @@ void I2C_DeInit(I2C_RegDef_t *pI2Cx);									/*! I2Cx Deinitialisation API*/
 
 void I2C_MasterSendData(I2C_Handle_t *pI2CHandle, uint8_t *pTxBuffer, uint8_t Len, uint8_t SlaveAddr);
 
+void I2C_MasterReceiveData(I2C_Handle_t *pI2CHandle, uint8_t *pRxBuffer, uint8_t Len, uint8_t SlaveAddr);
+
 /******************************************************************************************************************/
 
 
@@ -122,6 +124,7 @@ uint8_t I2C_GetFlagStatus(I2C_RegDef_t *pI2Cx, uint32_t FlagName);		/*! GET I2C 
 
 void I2C_ApplicationEventCallback(I2C_Handle_t *pI2CHandle, uint8_t AppEvent);
 
+void I2C_ManageAcking(I2C_RegDef_t *pI2Cx, uint8_t EnorDi);
 /******************************************************************************************************************/
 
 

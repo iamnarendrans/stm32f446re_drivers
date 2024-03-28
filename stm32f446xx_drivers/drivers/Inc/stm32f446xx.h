@@ -700,10 +700,27 @@ typedef struct{
 #define IRQ_NO_EXTI9_5		23		/*!EXTI Line[9:5] interrupts*/
 #define IRQ_NO_EXTI15_10	40		/*!EXTI Line[15:10] interrupts*/
 
-#define IRQ_NO_SPI1			35
-#define IRQ_NO_SPI2			36
-#define IRQ_NO_SPI3			51
-#define IRQ_NO_SPI4			84
+#define IRQ_NO_SPI1			35		/*!SPI1 IRQ interrupts*/
+#define IRQ_NO_SPI2			36		/*!SPI2 IRQ interrupts*/
+#define IRQ_NO_SPI3			51		/*!SPI3 IRQ interrupts*/
+#define IRQ_NO_SPI4			84		/*!SPI4 IRQ interrupts*/
+
+#define IRQ_NO_I2C1_EV		31		/*!I2C1 IRQ Event Interrupt*/
+#define IRQ_NO_I2C1_ER		32		/*!I2C1 IRQ Error Interrupt*/
+#define IRQ_NO_I2C2_EV		33		/*!I2C2 IRQ Event Interrupt*/
+#define IRQ_NO_I2C2_ER		34		/*!I2C2 IRQ Error Interrupt*/
+#define IRQ_NO_I2C3_EV		72		/*!I2C3 IRQ Event Interrupt*/
+#define IRQ_NO_I2C3_ER		73		/*!I2C3 IRQ Error Interrupt*/
+
+#define IRQ_NO_CAN1_TX		19		/*!CAN1 TX Interrupts */
+#define IRQ_NO_CAN1_RX0		20		/*!CAN1 RX0 Interrupts */
+#define IRQ_NO_CAN1_RX1		21		/*!CAN1 RX1 Interrupts */
+#define IRQ_NO_CAN1_SCE		22		/*!CAN1 SCE Interrupts */
+#define IRQ_NO_CAN2_TX		63		/*!CAN2 TX Interrupts */
+#define IRQ_NO_CAN2_RX0		64		/*!CAN2 RX0 Interrupts */
+#define IRQ_NO_CAN2_RX1		65		/*!CAN2 RX1 Interrupts */
+#define IRQ_NO_CAN2_SCE		66		/*!CAN2 SCE Interrupts */
+
 
 
 /*

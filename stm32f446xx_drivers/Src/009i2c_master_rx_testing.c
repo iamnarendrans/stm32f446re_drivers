@@ -5,6 +5,10 @@
  *      Author: Narendran Srinivasan
  */
 #include "stm32f446xx.h"
+#include <stdio.h>
+
+
+extern initialise_monitor_handles();
 
 #define MY_ADDR		0x61
 #define SLAVE_ADDR	0x68
@@ -71,7 +75,12 @@ void GPIO_ButtonInit(void)
 int main(void)
 {
 
-	uint8_t some_data[] = "We are testing I2C master Tx\n";
+	uint8_t recv_buffer[32];
+	uint8_t commandcode;
+	uint8_t length;
+
+	initialise_monitor_handles();
+	printf("Application is running\n");
 
 	GPIO_ButtonInit();
 	// I2C Gpio Inits
@@ -83,6 +92,9 @@ int main(void)
 	// Enable I2C peripheral
 	I2C_PeripheralControl(I2C1, ENABLE);
 
+	// Ack bit is made 1 after PE = 1
+	I2C_ManageAcking(I2C1, I2C_ACK_EN);
+
 	while(1)
 	{
 		//wait till button is pressed
@@ -91,8 +103,24 @@ int main(void)
 		//to avoid button de-bouncing related issues 200ms of delay
 		delay();
 
-		// Send some data to the arduino slave
-		I2C_MasterSendData(&I2C1Handle, some_data, strlen((char*)some_data), SLAVE_ADDR, I2C_ENABLE_SR);
+		// receive the data from arduino slave
+		commandcode = 0x51;
+
+		I2C_MasterSendData(&I2C1Handle, &commandcode, 1, SLAVE_ADDR, I2C_ENABLE_SR);
+
+		I2C_MasterReceiveData(&I2C1Handle, &length, 1, SLAVE_ADDR, I2C_ENABLE_SR);
+
+		commandcode = 0x52;
+
+		I2C_MasterSendData(&I2C1Handle, &commandcode, 1, SLAVE_ADDR, I2C_ENABLE_SR);
+
+		I2C_MasterReceiveData(&I2C1Handle, recv_buffer, length, SLAVE_ADDR, I2C_ENABLE_SR);
+
+		recv_buffer[length+1] = '\0';
+
+		printf("DATA: %s", recv_buffer);
+
+
 	}
 
 

@@ -178,19 +178,19 @@ void SPI_IRQHandling(SPI_Handle_t *pHandle);							/*! SPIx IRQ/ISR Handler API*
 
 /********************************************Other Peripheral Control APIs*****************************************/
 
-void SPI_PeripheralControl(SPI_RegDef_t *pSPIx, uint8_t EnOrDi);
+void SPI_PeripheralControl(SPI_RegDef_t *pSPIx, uint8_t EnOrDi);		/*! SPIx Peripheral control API */
 
-void SPI_SSIConfig(SPI_RegDef_t *pSPIx, uint8_t EnOrDi);
+void SPI_SSIConfig(SPI_RegDef_t *pSPIx, uint8_t EnOrDi);				/*! SPIx Software slave managment API */
 
-void SPI_SSOEConfig(SPI_RegDef_t *pSPIx, uint8_t EnOrDi);
+void SPI_SSOEConfig(SPI_RegDef_t *pSPIx, uint8_t EnOrDi);				/*! SPIx Software slave managment Error API */
 
-void SPI_ClearOVRFlag(SPI_RegDef_t *pSPIx);
+void SPI_ClearOVRFlag(SPI_RegDef_t *pSPIx);								/*! SPIx clear overrun flag API */
 
-void SPI_CloseTransmission(SPI_Handle_t *pSPIHandle);
+void SPI_CloseTransmission(SPI_Handle_t *pSPIHandle);					/*! SPIx Transmission closure API */
 
-void SPI_CloseReception(SPI_Handle_t *pSPIHandle);
+void SPI_CloseReception(SPI_Handle_t *pSPIHandle);						/*! SPIx Reception closure API */
 
-void SPI_ApplicationEventCallback(SPI_Handle_t *pSPIHandle, uint8_t AppEvent);
+void SPI_ApplicationEventCallback(SPI_Handle_t *pSPIHandle, uint8_t AppEvent);	/*! SPIx Application callback event for IRQ's */
 
 /******************************************************************************************************************/
 

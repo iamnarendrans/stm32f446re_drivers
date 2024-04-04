@@ -11,7 +11,6 @@
 
 #include "stm32f446xx.h"				/*! System Driver header inclusion*/
 
-
 #define RCC_CR_HSI_ON		0
 #define RCC_CR_HSI_RDY		1
 #define RCC_CR_HSI_TRIM		3
@@ -33,6 +32,12 @@ void CLOCK_HSE_ON(void);
 void CLOCK_HSE_OFF(void);
 
 void CLOCK_PLL_ON(void);
+
+uint32_t RCC_GetPLLOutputClk(void);
+
+uint32_t RCC_GetPCLK1Value(void);
+
+uint32_t RCC_GetPCLK2Value(void);
 
 /**************************************************************************************************************/
 

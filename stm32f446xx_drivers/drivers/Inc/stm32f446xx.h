@@ -353,6 +353,19 @@ typedef struct{
 	__vo uint32_t CFGR;			/*!<SYSCFG Configuration Register2>			Address offset: 0x2C*/
 }SYSCFG_RegDef_t;
 
+/*
+ * Peripheral Register definition structure for USART/UART
+ */
+
+typedef struct{
+	__vo uint32_t	SR;			/*!< Status Register						Address offset: 0x00 */
+	__vo uint32_t	DR;			/*!< Data Register							Address offset: 0x04 */
+	__vo uint32_t	BRR;		/*!< Baud Rate Register						Address offset: 0x08 */
+	__vo uint32_t	CR1;		/*!< Control Register 1						Address offset: 0x0C */
+	__vo uint32_t	CR2;		/*!< Control Register 1						Address offset: 0x10 */
+	__vo uint32_t	CR3;		/*!< Control Register 1						Address offset: 0x14 */
+	__vo uint32_t	GTPR;		/*!< Guard time and prescaler				Address offset: 0x18 */
+}USART_RegDef_t;
 
 /*
  * Peripheral definitions (Peripheral base addresses type casted to xxx_RegDef_t)
@@ -379,6 +392,13 @@ typedef struct{
 #define I2C1				((I2C_RegDef_t*)I2C1_BASEADDR)			/*! Defining I2C1 peripheral as typecasting base address*/
 #define I2C2				((I2C_RegDef_t*)I2C2_BASEADDR)			/*! Defining I2C2 peripheral as typecasting base address*/
 #define I2C3				((I2C_RegDef_t*)I2C3_BASEADDR)			/*! Defining I2C3 peripheral as typecasting base address*/
+
+#define USART1				((USART_RegDef_t*)USART1_BASEADDR)		/*! Defining USART1 peripheral as typecasting base address*/
+#define USART2				((USART_RegDef_t*)USART2_BASEADDR)		/*! Defining USART2 peripheral as typecasting base address*/
+#define USART3				((USART_RegDef_t*)USART3_BASEADDR)		/*! Defining USART3 peripheral as typecasting base address*/
+#define UART4				((USART_RegDef_t*)UART4_BASEADDR)		/*! Defining UART4 peripheral as typecasting base address*/
+#define UART5				((USART_RegDef_t*)UART5_BASEADDR)		/*! Defining UART5 peripheral as typecasting base address*/
+#define USART6				((USART_RegDef_t*)USART6_BASEADDR)		/*! Defining USART6 peripheral as typecasting base address*/
 
 /**********************************************END: PERIPHERAL STRUCTURES******************************************************************/
 
@@ -665,11 +685,26 @@ typedef struct{
  * Macros to reset the I2Cx peripherals
  */
 
-#define I2C1_REG_RESET()		do{ (RCC -> APB1RSTR |= (1 << 21));(RCC -> APB2RSTR &= ~(1 << 21)); }while(0)
+#define I2C1_REG_RESET()		do{ (RCC -> APB1RSTR |= (1 << 21));(RCC -> APB1RSTR &= ~(1 << 21)); }while(0)
 #define I2C2_REG_RESET()		do{ (RCC -> APB1RSTR |= (1 << 22));(RCC -> APB1RSTR &= ~(1 << 22)); }while(0)
 #define I2C3_REG_RESET()		do{ (RCC -> APB1RSTR |= (1 << 23));(RCC -> APB1RSTR &= ~(1 << 23)); }while(0)
 
 /******************************************************************************************************************************************/
+/************************************************** USARTx RESET MACROS *******************************************************************/
+
+/*
+ * Macros to reset the USARTx peripherals
+ */
+
+#define USART1_REG_RESET()		do{ (RCC -> APB2RSTR |= (1 <<  4));(RCC -> APB2RSTR &= ~(1 <<  4)); }while(0)
+#define USART2_REG_RESET()		do{ (RCC -> APB1RSTR |= (1 << 17));(RCC -> APB1RSTR &= ~(1 << 17)); }while(0)
+#define USART3_REG_RESET()		do{ (RCC -> APB1RSTR |= (1 << 18));(RCC -> APB1RSTR &= ~(1 << 18)); }while(0)
+#define UART4_REG_RESET()		do{ (RCC -> APB1RSTR |= (1 << 19));(RCC -> APB1RSTR &= ~(1 << 19)); }while(0)
+#define UART5_REG_RESET()		do{ (RCC -> APB1RSTR |= (1 << 20));(RCC -> APB1RSTR &= ~(1 << 20)); }while(0)
+#define USART6_REG_RESET()		do{ (RCC -> APB2RSTR |= (1 <<  5));(RCC -> APB2RSTR &= ~(1 <<  5)); }while(0)
+
+/******************************************************************************************************************************************/
+
 /*********************************************** GPIO_BASEADDR_TO_CODE ********************************************************************/
 /*
  * This macro returns a code (between 0 to 4) for a given GPIO base Address(x)
@@ -720,6 +755,13 @@ typedef struct{
 #define IRQ_NO_CAN2_RX0		64		/*!CAN2 RX0 Interrupts */
 #define IRQ_NO_CAN2_RX1		65		/*!CAN2 RX1 Interrupts */
 #define IRQ_NO_CAN2_SCE		66		/*!CAN2 SCE Interrupts */
+
+#define IRQ_NO_USART1		37		/*!USART1 global Interrupt */
+#define IRQ_NO_USART2		38		/*!USART2 global Interrupt */
+#define IRQ_NO_USART3		39		/*!USART3 global Interrupt */
+#define IRQ_NO_UART4		52		/*!UART4  global Interrupt */
+#define IRQ_NO_UART5		53		/*!UART5  global Interrupt */
+#define IRQ_NO_USART6		71		/*!USART6 global Interrupt */
 
 
 
@@ -946,11 +988,106 @@ typedef struct{
  *  										Bit position definitons of the I2C peripherals - END
  ******************************************************************************************************************************************/
 
+/******************************************************************************************************************************************
+ *  										Bit position definitons of the USART peripherals - START
+ ******************************************************************************************************************************************/
+/****************************************************************SR***********************************************************************/
+/*
+ * @SR - Status Register
+ */
+#define USART_SR_PE				0	/*!Parity Error Bit */
+#define USART_SR_FE				1	/*!Framing Error Bit */
+#define USART_SR_NE				2	/*!Noise detected Bit */
+#define USART_SR_ORE			3	/*!Overrun Error Bit */
+#define USART_SR_IDLE			4	/*!IDLE line detected Bit */
+#define USART_SR_RXNE			5	/*!Read data register Bit not empty */
+#define USART_SR_TC				6	/*!Transmission completion Bit */
+#define USART_SR_TXE			7	/*!Transmit data register empty Bit */
+#define USART_SR_LBD			8	/*!LIN Break detection Bit */
+#define USART_SR_CTS			9	/*!CTS flat Bit */
+/****************************************************************SR***********************************************************************/
+/****************************************************************DR***********************************************************************/
+/*
+ * @DR - Data Register
+ */
+#define USART_DR_DR80			0		/*! 8 bit data register */
+/****************************************************************DR***********************************************************************/
+/****************************************************************BRR***********************************************************************/
+/*
+ * @BRR - Baud Rate Register
+ */
+#define USART_BRR_DIVFR3_0		0		/*! DIV_Mantissa USARTDIV */
+#define USART_BRR_DIVM11_0		4		/*! DIV_Fraction USARTDIV */
+/***************************************************************BRR***********************************************************************/
+/***************************************************************CR1***********************************************************************/
+/*
+ * @CR1 - Control Register 1
+ */
+#define USART_CR1_SBK			0		/*! Send Brake bit */
+#define USART_CR1_RWU			1		/*! Receiver wakeup bit */
+#define USART_CR1_RE			2		/*! Receiver Enable bit */
+#define USART_CR1_TE			3		/*! Transmitter Enable bit */
+#define USART_CR1_IDLEIE		4		/*! IDLE Interrupt Enable bit */
+#define USART_CR1_RXNEIE		5		/*! RXNE Interrupt Enable bit */
+#define USART_CR1_TCIE			6		/*! Transmission complete interrupt enable bit */
+#define USART_CR1_TXEIE			7		/*! TXE Interrupt enable bit */
+#define USART_CR1_PEIE			8		/*! PE Interrupt Enable bit */
+#define USART_CR1_PS			9		/*! Parity Selection bit */
+#define USART_CR1_PCE			10		/*! Parity Controll enable bit */
+#define USART_CR1_WAKE			11		/*! Wakeup method bit */
+#define USART_CR1_M				12		/*! Word length bit */
+#define USART_CR1_UE			13		/*! USART Enable bit */
+#define USART_CR1_OVER8			15		/*! Oversampling mode bit */
+/***************************************************************CR1***********************************************************************/
+/***************************************************************CR2***********************************************************************/
+/*
+ * @CR2 - Control Register 2
+ */
+#define USART_CR2_ADD			0		/*! Address of USART node */
+#define USART_CR2_LBDL			5		/*! Lin Break length detecction */
+#define USART_CR2_LBDIE			6		/*! Lin Break detection interrupt enable */
+#define USART_CR2_LBCL			8		/*! Last bit clock pulse */
+#define USART_CR2_CPHA			9		/*! Clock phase bit */
+#define USART_CR2_CPOL			10		/*! Clock polarity bit */
+#define USART_CR2_CLKEN			11		/*! Clock Enable bit */
+#define USART_CR2_STOP			12		/*! STOP bit configuration */
+#define USART_CR2_LINEN			14		/*! LIN mode Enable */
+/***************************************************************CR2***********************************************************************/
+/***************************************************************CR3***********************************************************************/
+/*
+ * @CR2 - Control Register 3
+ */
+#define USART_CR3_EIE			0		/*! Error Interrupt Enable*/
+#define USART_CR3_IREN			1		/*! IrDA mode Enable*/
+#define USART_CR3_IRLP			2		/*! IrDA Low-Power*/
+#define USART_CR3_HDSEL			3		/*! Half-duplex selection*/
+#define USART_CR3_NACK			4		/*! Smartcard NACK enable*/
+#define USART_CR3_SCEN			5		/*! Smartcard mode enable*/
+#define USART_CR3_DMAR			6		/*! DMA Enable Receiver*/
+#define USART_CR3_DMAT			7		/*! DMA Enable Transmitter*/
+#define USART_CR3_RTSE			8		/*! RTS Enable  */
+#define USART_CR3_CTSE			9		/*! CTS Enable */
+#define USART_CR3_CTSIE			10		/*! CTS Interrupt Enable*/
+#define USART_CR3_ONEBIT		11		/*! One Sample bit method enable*/
+/***************************************************************CR3***********************************************************************/
+/**************************************************************GTPR***********************************************************************/
+/*
+ * @GTPR - Guard time and prescaler register
+ */
+#define USART_GTPR_PSC0_7		0		/*! Prescaler value */
+#define USART_GTPR_GT8_15		8		/*! Guard time value */
+
+/**************************************************************GTPR***********************************************************************/
+
+/******************************************************************************************************************************************
+ *  										Bit position definitons of the USART peripherals - END
+ ******************************************************************************************************************************************/
 
 #include "stm32f446xx_gpio_driver.h"
 #include "stm32f446xx_i2c_driver.h"
 #include "stm32f446xx_clock_driver.h"
 #include "stm32f446xx_adc_driver.h"
 #include "stm32f446xx_spi_driver.h"
+#include "stm32f446xx_usart_driver.h"
 /******************************************************************************************************************************************/
 #endif /* INC_STM32F466XX_H_ */

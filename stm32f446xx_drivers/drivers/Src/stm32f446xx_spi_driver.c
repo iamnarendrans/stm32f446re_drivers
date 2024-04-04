@@ -230,7 +230,7 @@ bool SPI_SendData(SPI_RegDef_t *pSPIx, uint8_t *pTxBuffer, uint32_t Len)
  *
  * @return								- None
  *
- * @note								- None
+ * @note								- This is a blocking call / Polling type
  *****************************************************************************************************************/
 void SPI_ReceiveData(SPI_RegDef_t *pSPIx,uint8_t *pRxBuffer, uint32_t Len)
 {
@@ -688,7 +688,7 @@ void SPI_ClearOVRFlag(SPI_RegDef_t *pSPIx)
  * @brief								- This function is an application event callback from application layer
  *
  * @param[SPI_Handle_t *pSPIHandle]		- SPI peripheral Handler
- * @param[uint8_t AppEvent]				- Event to be passed
+ * @param[uint8_t AppEv]				- Event to be passed
  * @return								- None
  *
  * @note								- Implemented as week function, if user not use this in application code

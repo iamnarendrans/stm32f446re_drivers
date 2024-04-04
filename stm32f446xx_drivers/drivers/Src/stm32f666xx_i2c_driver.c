@@ -11,8 +11,7 @@
 /****************************************************************************************************************
  * 													PRIVATE VARIABLES
  ****************************************************************************************************************/
-uint16_t AHB_PreScaler[8] = {2,4,8,16,64,128,256,512};
-uint16_t APB1_PreScaler[4] = {2,4,8,16};
+
 /****************************************************************************************************************/
 
 /****************************************************************************************************************
@@ -28,81 +27,6 @@ static void I2C_MasterHandleRXNEInterrupt(I2C_Handle_t *pI2CHandle);
 /******************************************************************************************************************
  * 													FUNCTIONS
  ****************************************************************************************************************/
-
-/******************************************************************************************************************
- * @fn									- RCC_GetPLLOutputClk
- *
- * @brief								- This function returns the PLL clock value
- *
- * @param[None]							- None
- *
- * @return								- PLL clock value
- *
- * @note								- None
- *****************************************************************************************************************/
-uint32_t RCC_GetPLLOutputClk(void)
-{
-	// will implement in future
-
-	return 0;
-}
-
-/******************************************************************************************************************
- * @fn									- RCC_GetPCLK1Value
- *
- * @brief								- This function returns the peripheral 1 clock value
- *
- * @param[None]							- None
- *
- * @return								- APB1 clock value
- *
- * @note								- None
- *****************************************************************************************************************/
-uint32_t RCC_GetPCLK1Value(void)
-{
-	uint32_t pclk1, SystemClk;
-
-	uint8_t clksrc, temp, ahbp,apb1p;
-
-	clksrc = ((RCC->CFRG >> 2) & 0x3);
-
-	if (clksrc == 0)
-	{	// If clksrc = 0 => which is HSI
-		SystemClk = 16000000;
-	}else if (clksrc == 1)
-	{	// If clksrc = 1 => which is HSE
-		SystemClk = 25000000;
-	}else if (clksrc == 2)
-	{
-		SystemClk = RCC_GetPLLOutputClk();
-	}
-
-	// For AHB Prescaler find
-	temp = ((RCC->CFRG >> 4) & 0xF);
-
-	if (temp < 8)
-	{
-		ahbp = 1;
-	}else
-	{
-		ahbp = AHB_PreScaler[temp - 8];
-	}
-
-	// For APB1 Prescaler find
-	temp = ((RCC->CFRG >> 10) & 0x7);
-
-	if (temp < 4)
-	{
-		apb1p = 1;
-	}else
-	{
-		apb1p = APB1_PreScaler[temp - 4];
-	}
-
-	pclk1 = (SystemClk/ahbp) / apb1p;
-
-	return pclk1;
-}
 
 /********************************************Peripheral Clock Control**********************************************/
 /******************************************************************************************************************
@@ -178,6 +102,7 @@ void I2C_Init(I2C_Handle_t *pI2CHandle)
 	pI2CHandle->pI2Cx->CR2 = (tempreg & 0x3F);
 
 	// Program the device own address
+	tempreg = 0;
 	tempreg |= pI2CHandle->I2C_Config.I2C_DeviceAddr << I2C_OAR1_ADD71;
 	tempreg |= (1 << 14); //Mandatory from RM
 	pI2CHandle->pI2Cx->OAR1 = tempreg;
@@ -426,7 +351,39 @@ void I2C_MasterReceiveData(I2C_Handle_t *pI2CHandle, uint8_t *pRxBuffer, uint8_t
 
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/******************************************************************************************************************
+ * @fn									- I2C_SlaveSendData
+ *
+ * @brief								- This function is used send data as slave
+ *
+ * @param[I2C_RegDef_t *pI2Cx]			- Base Address of the I2Cx Peripheral
+ *
+ * @return								- None
+ *
+ * @note								- Blocking Method
+ *****************************************************************************************************************/
+void I2C_SlaveSendData(I2C_RegDef_t *pI2Cx, uint8_t data)
+{
+	pI2Cx->DR = data;
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/******************************************************************************************************************
+ * @fn									- I2C_SlaveReceiveData
+ *
+ * @brief								- This function is used receive data as slave
+ *
+ * @param[I2C_RegDef_t *pI2Cx]			- Base Address of the I2Cx Peripheral
+ *
+ * @return								- received data byte
+ *
+ * @note								- Blocking Method
+ *****************************************************************************************************************/
+uint8_t I2C_SlaveReceiveData(I2C_RegDef_t *pI2Cx)
+{
+	return (uint8_t) pI2Cx->DR;
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /******************************************************************************************************************
  * @fn									- I2C_MasterSendDataIT
  *
@@ -606,8 +563,9 @@ void I2C_EV_IRQHandling(I2C_Handle_t *pI2CHandle)
 	temp1 = pI2CHandle->pI2Cx->CR2 & (1 << I2C_CR2_ITEVTEN);
 	temp2 = pI2CHandle->pI2Cx->CR2 & (1 << I2C_CR2_ITBUFEN);
 
-	temp3 = pI2CHandle->pI2Cx->SR1 & (1 << I2C_SR1_SB);
 /***********************Check for start bit event handling************************************/
+	temp3 = pI2CHandle->pI2Cx->SR1 & (1 << I2C_SR1_SB);
+
 	// 1. Handle for an event generated by SB event
 	// Note*: Start bit flag is only applicant in master mode
 	if(temp1 && temp3)
@@ -625,8 +583,9 @@ void I2C_EV_IRQHandling(I2C_Handle_t *pI2CHandle)
 		}
 	}
 
-	temp3 = pI2CHandle->pI2Cx->SR1 & (1 << I2C_SR1_ADDR);
 /***********************Check for Address bit event handling************************************/
+	temp3 = pI2CHandle->pI2Cx->SR1 & (1 << I2C_SR1_ADDR);
+
 	// 2. Handle for interrupt generated by ADDR Event
 	// Note*: When master mode - Address is sent
 	// 		  When slave mode  - Address matched with own address
@@ -636,8 +595,9 @@ void I2C_EV_IRQHandling(I2C_Handle_t *pI2CHandle)
 		I2C_ClearADDRFlag(pI2CHandle);
 	}
 
-	temp3 = pI2CHandle->pI2Cx->SR1 & (1 << I2C_SR1_BTF);
 /***********************Check for Byte transfer finished event handling************************************/
+	temp3 = pI2CHandle->pI2Cx->SR1 & (1 << I2C_SR1_BTF);
+
 	// 3. Handle for interrupt generated by BTF(Byte transfer finished) event
 	if(temp1 && temp3)
 	{
@@ -671,8 +631,9 @@ void I2C_EV_IRQHandling(I2C_Handle_t *pI2CHandle)
 
 	}
 
-	temp3 = pI2CHandle->pI2Cx->SR1 & (1 << I2C_SR1_STOPF);
 /***********************Check for STOPF bit event handling************************************/
+	temp3 = pI2CHandle->pI2Cx->SR1 & (1 << I2C_SR1_STOPF);
+
 	// 4. Handle for interrupt generated by STOPF event
 	// Note*: stop detection flag is only applicable in slave mode. For master this flag will
 	if(temp1 && temp3)
@@ -685,8 +646,9 @@ void I2C_EV_IRQHandling(I2C_Handle_t *pI2CHandle)
 		I2C_ApplicationEventCallback(pI2CHandle, I2C_EV_STOP);
 	}
 
-	temp3 = pI2CHandle->pI2Cx->SR1 & (1 << I2C_SR1_TxE);
 /***********************Check for Transmit bit event handling************************************/
+	temp3 = pI2CHandle->pI2Cx->SR1 & (1 << I2C_SR1_TxE);
+
 	// 5. Handle for interrupt generated by TXE event
 	if(temp1 && temp2 && temp3)
 	{
@@ -700,10 +662,21 @@ void I2C_EV_IRQHandling(I2C_Handle_t *pI2CHandle)
 				I2C_MasterHandleTXEInterrupt(pI2CHandle);
 			}
 		}
+		else
+		{
+			// Slave
+			// make sure that the slave is really in transmitter mode
+			if(pI2CHandle->pI2Cx->SR2 & (1 << I2C_SR2_TRA))
+			{
+				I2C_ApplicationEventCallback(pI2CHandle, I2C_EV_DATA_REQ);
+			}
+
+		}
 	}
 
-	temp3 = pI2CHandle->pI2Cx->SR1 & (1 << I2C_SR1_RxNE);
 /***********************Check for Receive bit event handling************************************/
+	temp3 = pI2CHandle->pI2Cx->SR1 & (1 << I2C_SR1_RxNE);
+
 	if(temp1 && temp2 && temp3)
 	{
 		if(pI2CHandle->pI2Cx->SR2 & (1 << I2C_SR2_MSL))
@@ -713,6 +686,14 @@ void I2C_EV_IRQHandling(I2C_Handle_t *pI2CHandle)
 			if(pI2CHandle->TxRxState == I2C_BUSY_IN_RX)
 			{
 				I2C_MasterHandleRXNEInterrupt(pI2CHandle);
+			}
+		}else
+		{
+			// Slave
+			// make sure that the slave is really in receiver mode
+			if(!(pI2CHandle->pI2Cx->SR2 & (1 << I2C_SR2_TRA)))
+			{
+				I2C_ApplicationEventCallback(pI2CHandle, I2C_EV_DATA_RCV);
 			}
 		}
 	}
@@ -856,6 +837,151 @@ uint8_t I2C_GetFlagStatus(I2C_RegDef_t *pI2Cx, uint32_t FlagName)
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /******************************************************************************************************************
+ * @fn									- I2C_ApplicationEventCallback
+ *
+ * @brief								- This function is an application event callback from application layer
+ *
+ * @param[I2C_Handle_t *pI2CHandle]		- I2C peripheral Handler
+ * @param[uint8_t AppEvent]				- Event to be passed
+ * @return								- None
+ *
+ * @note								- Implemented as week function, if user not use this in application code
+ *****************************************************************************************************************/
+__weak void I2C_ApplicationEventCallback(I2C_Handle_t *pI2CHandle, uint8_t AppEvent)
+{
+	// This is a weak implementation. the application may override this function
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/******************************************************************************************************************
+ * @fn									- I2C_GenerateStopCondition
+ *
+ * @brief								- This function is used to generate the stop conditon of I2C bus
+ *
+ * @param[I2C_RegDef_t *pI2Cx]			- Base Address of the I2Cx Peripheral
+ *
+ * @return								- None
+ *
+ * @note								- None
+ *****************************************************************************************************************/
+void I2C_GenerateStopCondition(I2C_RegDef_t *pI2Cx)
+{
+	pI2Cx->CR1 |= (1 << I2C_CR1_STOP);
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/******************************************************************************************************************
+ * @fn									- I2C_ManageAcking
+ *
+ * @brief								- This function is used to manage/handle ACK/NACK
+ *
+ * @param[I2C_RegDef_t *pI2Cx]			- Base Address of the I2Cx Peripheral
+ * @param[uint8_t EnorDi]				- Enable/Disbale Input for ACK Enable & Disable
+ *
+ * @return								- None
+ *
+ * @note								- None
+ *****************************************************************************************************************/
+void I2C_ManageAcking(I2C_RegDef_t *pI2Cx, uint8_t EnorDi)
+{
+	if(EnorDi == I2C_ACK_EN)
+	{
+		// Enable Acknowledgement
+		pI2Cx->CR1 |= (1 << I2C_CR1_ACK);
+	}
+	else
+	{
+		// Disable Acknowledgement
+		pI2Cx->CR1 &= ~(1 << I2C_CR1_ACK);
+	}
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/******************************************************************************************************************
+ * @fn									- I2C_CloseSendData
+ *
+ * @brief								- This function will close the I2C Transmission in interrupt mode
+ *
+ * @param[I2C_Handle_t *pI2CHandle]		- Base Address of the I2Cx Peripheral
+ *
+ * @return								- None
+ *
+ * @note								- None
+ *****************************************************************************************************************/
+void I2C_CloseSendData(I2C_Handle_t *pI2CHandle)
+{
+	// Implement the code to disable the ITBUFEN Control bit
+	pI2CHandle->pI2Cx->CR2 &= ~(1 << I2C_CR2_ITBUFEN);
+
+	// Implement the code to diable the ITEVTFN Control bit
+	pI2CHandle->pI2Cx->CR2 &= ~(1 << I2C_CR2_ITEVTEN);
+
+	pI2CHandle->TxRxState = I2C_READY;
+	pI2CHandle->pTxBuffer = NULL;
+	pI2CHandle->TxLen = 0;
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/******************************************************************************************************************
+ * @fn									- I2C_CloseReceiveData
+ *
+ * @brief								- This function will close the I2C reception in interrupt mode
+ *
+ * @param[I2C_RegDef_t *pI2Cx]			- Base Address of the I2Cx Peripheral
+ *
+ * @return								- None
+ *
+ * @note								- None
+ *****************************************************************************************************************/
+void I2C_CloseReceiveData(I2C_Handle_t *pI2CHandle)
+{
+	// Implement the code to disable the ITBUFEN Control bit
+	pI2CHandle->pI2Cx->CR2 &= ~(1 << I2C_CR2_ITBUFEN);
+
+	// Implement the code to diable the ITEVTFN Control bit
+	pI2CHandle->pI2Cx->CR2 &= ~(1 << I2C_CR2_ITEVTEN);
+
+	pI2CHandle->TxRxState = I2C_READY;
+	pI2CHandle->pRxBuffer = NULL;
+	pI2CHandle->RxLen = 0;
+	pI2CHandle->RxSize = 0;
+
+	if(pI2CHandle->I2C_Config.I2C_AckCtrl == I2C_ACK_EN)
+	{
+		I2C_ManageAcking(pI2CHandle->pI2Cx, ENABLE);
+	}
+
+
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/******************************************************************************************************************
+ * @fn									- I2C_SlaveEnableDisableCallbackEvents
+ *
+ * @brief								- This function used to enable and disbale the interrupt controls
+ *
+ * @param[I2C_RegDef_t *pI2Cx]		 	- Base Address of the I2Cx Peripheral
+ *
+ * @return								- None
+ *
+ * @note								- None
+ *****************************************************************************************************************/
+void I2C_SlaveEnableDisableCallbackEvents(I2C_RegDef_t *pI2Cx, uint8_t EnorDi)
+{
+	if(EnorDi == ENABLE)
+	{
+		pI2Cx->CR2 |= (1 << I2C_CR2_ITEVTEN);
+		pI2Cx->CR2 |= (1 << I2C_CR2_ITBUFEN);
+		pI2Cx->CR2 |= (1 << I2C_CR2_ITERREN);
+	}
+	else
+	{
+		pI2Cx->CR2 &= ~(1 << I2C_CR2_ITEVTEN);
+		pI2Cx->CR2 &= ~(1 << I2C_CR2_ITBUFEN);
+		pI2Cx->CR2 &= ~(1 << I2C_CR2_ITERREN);
+	}
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/********************************************Private Funtions and callbacks ***************************************/
+/******************************************************************************************************************/
+
+/******************************************************************************************************************
  * @fn									- I2C_MasterHandleTXEInterrupt
  *
  * @brief								- This function handle the TXE Event Interrupt
@@ -933,25 +1059,6 @@ static void I2C_MasterHandleRXNEInterrupt(I2C_Handle_t *pI2CHandle)
 	}
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/******************************************************************************************************************
- * @fn									- I2C_ApplicationEventCallback
- *
- * @brief								- This function is an application event callback from application layer
- *
- * @param[I2C_Handle_t *pI2CHandle]		- I2C peripheral Handler
- * @param[uint8_t AppEvent]				- Event to be passed
- * @return								- None
- *
- * @note								- Implemented as week function, if user not use this in application code
- *****************************************************************************************************************/
-__weak void I2C_ApplicationEventCallback(I2C_Handle_t *pI2CHandle, uint8_t AppEvent)
-{
-	// This is a weak implementation. the application may override this function
-}
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/********************************************Private Funtions and callbacks ***************************************/
-/******************************************************************************************************************/
-
 /******************************************************************************************************************
  * @fn									- I2C_GenerateStartCondition
  *
@@ -1044,101 +1151,3 @@ static void I2C_ClearADDRFlag(I2C_Handle_t *pI2CHandle)
 	}
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/******************************************************************************************************************
- * @fn									- I2C_GenerateStopCondition
- *
- * @brief								- This function is used to generate the stop conditon of I2C bus
- *
- * @param[I2C_RegDef_t *pI2Cx]			- Base Address of the I2Cx Peripheral
- *
- * @return								- None
- *
- * @note								- None
- *****************************************************************************************************************/
-void I2C_GenerateStopCondition(I2C_RegDef_t *pI2Cx)
-{
-	pI2Cx->CR1 |= (1 << I2C_CR1_STOP);
-}
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/******************************************************************************************************************
- * @fn									- I2C_ManageAcking
- *
- * @brief								- This function is used to manage/handle ACK/NACK
- *
- * @param[I2C_RegDef_t *pI2Cx]			- Base Address of the I2Cx Peripheral
- * @param[uint8_t EnorDi]				- Enable/Disbale Input for ACK Enable & Disable
- *
- * @return								- None
- *
- * @note								- None
- *****************************************************************************************************************/
-void I2C_ManageAcking(I2C_RegDef_t *pI2Cx, uint8_t EnorDi)
-{
-	if(EnorDi == I2C_ACK_EN)
-	{
-		// Enable Acknowledgement
-		pI2Cx->CR1 |= (1 << I2C_CR1_ACK);
-	}
-	else
-	{
-		// Disable Acknowledgement
-		pI2Cx->CR1 &= ~(1 << I2C_CR1_ACK);
-	}
-}
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/******************************************************************************************************************
- * @fn									- I2C_CloseSendData
- *
- * @brief								- This function will close the I2C Transmission in interrupt mode
- *
- * @param[I2C_Handle_t *pI2CHandle]			- Base Address of the I2Cx Peripheral
- *
- * @return								- None
- *
- * @note								- None
- *****************************************************************************************************************/
-void I2C_CloseSendData(I2C_Handle_t *pI2CHandle)
-{
-	// Implement the code to disable the ITBUFEN Control bit
-	pI2CHandle->pI2Cx->CR2 &= ~(1 << I2C_CR2_ITBUFEN);
-
-	// Implement the code to diable the ITEVTFN Control bit
-	pI2CHandle->pI2Cx->CR2 &= ~(1 << I2C_CR2_ITEVTEN);
-
-	pI2CHandle->TxRxState = I2C_READY;
-	pI2CHandle->pTxBuffer = NULL;
-	pI2CHandle->TxLen = 0;
-}
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/******************************************************************************************************************
- * @fn									- I2C_CloseReceiveData
- *
- * @brief								- This function will close the I2C reception in interrupt mode
- *
- * @param[I2C_Handle_t *pI2CHandle]			- Base Address of the I2Cx Peripheral
- *
- * @return								- None
- *
- * @note								- None
- *****************************************************************************************************************/
-void I2C_CloseReceiveData(I2C_Handle_t *pI2CHandle)
-{
-	// Implement the code to disable the ITBUFEN Control bit
-	pI2CHandle->pI2Cx->CR2 &= ~(1 << I2C_CR2_ITBUFEN);
-
-	// Implement the code to diable the ITEVTFN Control bit
-	pI2CHandle->pI2Cx->CR2 &= ~(1 << I2C_CR2_ITEVTEN);
-
-	pI2CHandle->TxRxState = I2C_READY;
-	pI2CHandle->pRxBuffer = NULL;
-	pI2CHandle->RxLen = 0;
-	pI2CHandle->RxSize = 0;
-
-	if(pI2CHandle->I2C_Config.I2C_AckCtrl == I2C_ACK_EN)
-	{
-		I2C_ManageAcking(pI2CHandle->pI2Cx, ENABLE);
-	}
-
-
-}
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////

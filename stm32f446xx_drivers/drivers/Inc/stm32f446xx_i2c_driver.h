@@ -110,6 +110,8 @@ typedef struct
 #define I2C_ERROR_AF    	5
 #define I2C_ERROR_OVR   	6
 #define I2C_ERROR_TIMEOUT 	7
+#define I2C_EV_DATA_REQ		8
+#define I2C_EV_DATA_RCV		9
 
 
 
@@ -146,6 +148,10 @@ void I2C_CloseSendData(I2C_Handle_t *pI2CHandle);
 
 void I2C_CloseReceiveData(I2C_Handle_t *pI2CHandle);
 
+void I2C_SlaveSendData(I2C_RegDef_t *pI2Cx, uint8_t data);
+
+uint8_t I2C_SlaveReceiveData(I2C_RegDef_t *pI2Cx);
+
 /******************************************************************************************************************/
 
 
@@ -172,6 +178,8 @@ void I2C_ApplicationEventCallback(I2C_Handle_t *pI2CHandle, uint8_t AppEvent);	/
 void I2C_ManageAcking(I2C_RegDef_t *pI2Cx, uint8_t EnorDi);				/*! I2Cx ACK/NACK Management API */
 
 void I2C_GenerateStopCondition(I2C_RegDef_t *pI2Cx);
+
+void I2C_SlaveEnableDisableCallbackEvents(I2C_RegDef_t *pI2Cx, uint8_t EnorDi);
 /******************************************************************************************************************/
 
 

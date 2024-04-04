@@ -1,3 +1,6 @@
-../drivers/Src/stm32f446xx_clock_driver.c:27:6:CLOCK_HSE_ON	2
-../drivers/Src/stm32f446xx_clock_driver.c:45:6:CLOCK_HSE_OFF	1
-../drivers/Src/stm32f446xx_clock_driver.c:61:6:CLOCK_PLL_ON	2
+../drivers/Src/stm32f446xx_clock_driver.c:37:6:CLOCK_HSE_ON	2
+../drivers/Src/stm32f446xx_clock_driver.c:55:6:CLOCK_HSE_OFF	1
+../drivers/Src/stm32f446xx_clock_driver.c:71:6:CLOCK_PLL_ON	2
+../drivers/Src/stm32f446xx_clock_driver.c:88:10:RCC_GetPLLOutputClk	1
+../drivers/Src/stm32f446xx_clock_driver.c:106:10:RCC_GetPCLK1Value	6
+../drivers/Src/stm32f446xx_clock_driver.c:164:10:RCC_GetPCLK2Value	4

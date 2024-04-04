@@ -90,6 +90,26 @@ typedef struct{
 #define	GPIO_PIN_NUM_14			14		/*! GPIO Pin Number 14 */
 #define	GPIO_PIN_NUM_15			15		/*! GPIO Pin Number 15 */
 
+/*
+ * GPIO AF Mode Macros
+ */
+#define GPIO_AF_MODE_0			0		/*! GPIO Alternate Function Mode 0 */
+#define GPIO_AF_MODE_1			1		/*! GPIO Alternate Function Mode 1 */
+#define GPIO_AF_MODE_2			2		/*! GPIO Alternate Function Mode 2 */
+#define GPIO_AF_MODE_3			3		/*! GPIO Alternate Function Mode 3 */
+#define GPIO_AF_MODE_4			4		/*! GPIO Alternate Function Mode 4 */
+#define GPIO_AF_MODE_5			5		/*! GPIO Alternate Function Mode 5 */
+#define GPIO_AF_MODE_6			6		/*! GPIO Alternate Function Mode 6 */
+#define GPIO_AF_MODE_7			7		/*! GPIO Alternate Function Mode 7 */
+#define GPIO_AF_MODE_8			8		/*! GPIO Alternate Function Mode 8 */
+#define GPIO_AF_MODE_9			9		/*! GPIO Alternate Function Mode 9 */
+#define GPIO_AF_MODE_10			10		/*! GPIO Alternate Function Mode 10*/
+#define GPIO_AF_MODE_11			11		/*! GPIO Alternate Function Mode 11*/
+#define GPIO_AF_MODE_12			12		/*! GPIO Alternate Function Mode 12*/
+#define GPIO_AF_MODE_13			13		/*! GPIO Alternate Function Mode 13*/
+#define GPIO_AF_MODE_14			14		/*! GPIO Alternate Function Mode 14*/
+#define GPIO_AF_MODE_15			15		/*! GPIO Alternate Function Mode 15*/
+
 
 /******************************************************************************************************************
  * 												APIs supported by this driver

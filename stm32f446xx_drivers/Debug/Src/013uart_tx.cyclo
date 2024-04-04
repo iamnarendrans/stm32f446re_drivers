@@ -1,0 +1,5 @@
+../Src/013uart_tx.c:23:6:delay	2
+../Src/013uart_tx.c:28:6:USART2_Init	1
+../Src/013uart_tx.c:40:6:USART2_GPIOInit	1
+../Src/013uart_tx.c:61:6:GPIO_ButtonInit	1
+../Src/013uart_tx.c:83:5:main	2

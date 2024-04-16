@@ -25,4 +25,9 @@ SUBDIRS := \
 Core/Src \
 Core/Startup \
 Drivers/STM32F4xx_HAL_Driver \
+FATFS/App \
+FATFS/Target \
+MIDWARE/FATFS_SD \
+Middlewares/FatFs \
+libraries/Src \
 

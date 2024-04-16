@@ -41,7 +41,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
-
+extern uint16_t Timer1, Timer2;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -183,17 +183,17 @@ void PendSV_Handler(void)
 void SysTick_Handler(void)
 {
   /* USER CODE BEGIN SysTick_IRQn 0 */
-
+	if(Timer1 > 0)
+	{
+		Timer1--;
+	}
+	if(Timer2 > 0)
+	{
+		Timer2--;
+	}
   /* USER CODE END SysTick_IRQn 0 */
   HAL_IncTick();
   /* USER CODE BEGIN SysTick_IRQn 1 */
-//  static uint16_t cnt = 0;
-//  cnt++;
-//  if(cnt == 1000)
-//  {
-//	  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
-//	  cnt = 0;
-//  }
 
   /* USER CODE END SysTick_IRQn 1 */
 }

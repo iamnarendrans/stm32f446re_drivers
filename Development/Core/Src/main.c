@@ -124,7 +124,7 @@ int main(void)
   MX_FATFS_Init();
   /* USER CODE BEGIN 2 */
   SDCard_Init();
-  CharaExtendedCSVFile_Create();
+  // CharaExtendedCSVFile_Create();
   // SDCard_Size();
   /* USER CODE END 2 */
 
@@ -134,8 +134,8 @@ int main(void)
   {
 //	  sprintf(msg, "Hello Kiddy! Tracing X = %d\r\n", x);
 //	  HAL_UART_Transmit(&huart2, msg, sizeof(msg), 100);
-	  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_6);
-	  delay_ms_timer(50);
+//	  HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_6);
+//	  delay_ms_timer(50);
 //	  x++;
     /* USER CODE END WHILE */
 

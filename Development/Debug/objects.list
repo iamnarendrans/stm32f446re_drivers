@@ -35,4 +35,6 @@
 "./Middlewares/FatFs/ff_gen_drv.o"
 "./Middlewares/FatFs/syscall.o"
 "./libraries/Src/SD.o"
+"./libraries/Src/user_dsp.o"
 "./libraries/Src/user_helper.o"
+"./libraries/Src/user_math.o"

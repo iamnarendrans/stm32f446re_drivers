@@ -22,6 +22,7 @@ DWORD	FreeClusters;
 uint32_t TotalSize, FreeSpace;
 char	RW_Buff[200];
 char TxBuffer[500];
+static bool sdInitialized = false;
 
 // Function to check if the SD card is mounted
 int is_sd_card_mounted(void) {
@@ -83,6 +84,7 @@ void SDCard_Init(void)
 			UART_Print(TxBuffer);
 			break;
 		}
+		sdInitialized = true;
 		sprintf(TxBuffer, "SD Card Mounted Successfully! \r\n\n");
 		UART_Print(TxBuffer);
 		//-----------------------------[ Get & Print The SD Card Size & Free Space ]--------------------
@@ -162,33 +164,42 @@ void CharaExtendedCSVFile_Create(void)
 
 
 void SD_Card_Test(void) {
-	HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
+//	HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
 
 	// Define local variables
 	FIL csv_File;   // File object
 	static uint32_t sd_count = 0;
 
 	// Check if the SD card is mounted
-	if (is_sd_card_mounted()) { // You need to define this function
+	if (sdInitialized  == true)
+	{ // You need to define this function
+		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, SET);
 		// Open the CSV File
-		if (f_open(&csv_File, "data.csv", FA_OPEN_ALWAYS | FA_WRITE) == FR_OK) {
+		if (f_open(&csv_File, "data.csv", FA_OPEN_ALWAYS | FA_WRITE) == FR_OK)
+		{
 			// Move to the end of the File
 			f_lseek(&csv_File, f_size(&csv_File));
 
 			// Write the count to the File
 			f_printf(&csv_File, "%lu\n", sd_count);
-			sprintf(TxBuffer, "The corresponding count %ld\r\n", sd_count);
-			UART_Print(TxBuffer);
+//			sprintf(TxBuffer, "The corresponding count %ld\r\n", sd_count);
+//			UART_Print(TxBuffer);
 
 			// Close the File
 			f_close(&csv_File);
-		} else {
-			UART_Print("Error: Unable to open the File.\r\n");
+		} else
+		{
+//			 UART_Print("Error: Unable to open the File.\r\n");
 		}
-	} else {
-		UART_Print("Error: SD card not mounted.\r\n");
+		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, RESET);
+	}
+	else
+	{
+//		 UART_Print("Error: SD card not mounted.\r\n");
 	}
 
 	sd_count++;
+
+
 }
 

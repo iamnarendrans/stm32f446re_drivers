@@ -23,8 +23,10 @@
 
 /* USER CODE BEGIN 0 */
 #define CALLBACK_10MS		10
+#define CALLBACK_20MS		20
 #define CALLBACK_100MS		100
 #define CALLBACK_1000MS		1000
+
 
 void delay_us_timer(uint32_t t_us);
 void delay_ms_timer(uint32_t t_ms);
@@ -225,24 +227,30 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
 	if(htim->Instance == TIM3)
 	{
 		static uint8_t cnt10MS = 0;
+		static uint8_t cnt20MS = 0;
 		static uint8_t cnt100MS = 0;
 		static uint16_t cnt1000MS = 0;
-		cnt10MS++; cnt100MS++; cnt1000MS++;
-		if(cnt10MS == CALLBACK_1000MS)
+		cnt10MS++; cnt20MS++; cnt100MS++; cnt1000MS++;
+		if(cnt10MS >= CALLBACK_10MS)
 		{	// 10Ms Callback
-
 			cnt10MS = 0;
 		}
-		else if(cnt100MS == CALLBACK_100MS)
+		else if(cnt20MS >= CALLBACK_20MS)
+		{
+			// 20MS Callback
+			SD_Card_Test();
+			cnt20MS = 0;
+		}
+		else if(cnt100MS >= CALLBACK_100MS)
 		{
 			// 100Ms Callback
-			// SD_Card_Test();
 			cnt100MS = 0;
 		}
 		else if(cnt1000MS >= CALLBACK_1000MS)
 		{
 			// 1s Callback
 			cnt1000MS = 0;
+
 		}
 
 	}

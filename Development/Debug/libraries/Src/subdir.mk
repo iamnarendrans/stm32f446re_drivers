@@ -6,15 +6,21 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
 ../libraries/Src/SD.c \
-../libraries/Src/user_helper.c 
+../libraries/Src/user_dsp.c \
+../libraries/Src/user_helper.c \
+../libraries/Src/user_math.c 
 
 OBJS += \
 ./libraries/Src/SD.o \
-./libraries/Src/user_helper.o 
+./libraries/Src/user_dsp.o \
+./libraries/Src/user_helper.o \
+./libraries/Src/user_math.o 
 
 C_DEPS += \
 ./libraries/Src/SD.d \
-./libraries/Src/user_helper.d 
+./libraries/Src/user_dsp.d \
+./libraries/Src/user_helper.d \
+./libraries/Src/user_math.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
@@ -24,7 +30,7 @@ libraries/Src/%.o libraries/Src/%.su libraries/Src/%.cyclo: ../libraries/Src/%.c
 clean: clean-libraries-2f-Src
 
 clean-libraries-2f-Src:
-	-$(RM) ./libraries/Src/SD.cyclo ./libraries/Src/SD.d ./libraries/Src/SD.o ./libraries/Src/SD.su ./libraries/Src/user_helper.cyclo ./libraries/Src/user_helper.d ./libraries/Src/user_helper.o ./libraries/Src/user_helper.su
+	-$(RM) ./libraries/Src/SD.cyclo ./libraries/Src/SD.d ./libraries/Src/SD.o ./libraries/Src/SD.su ./libraries/Src/user_dsp.cyclo ./libraries/Src/user_dsp.d ./libraries/Src/user_dsp.o ./libraries/Src/user_dsp.su ./libraries/Src/user_helper.cyclo ./libraries/Src/user_helper.d ./libraries/Src/user_helper.o ./libraries/Src/user_helper.su ./libraries/Src/user_math.cyclo ./libraries/Src/user_math.d ./libraries/Src/user_math.o ./libraries/Src/user_math.su
 
 .PHONY: clean-libraries-2f-Src
 

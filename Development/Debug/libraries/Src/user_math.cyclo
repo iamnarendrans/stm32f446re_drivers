@@ -1,0 +1,4 @@
+../libraries/Src/user_math.c:10:10:MAP	1
+../libraries/Src/user_math.c:15:10:Constrain	3
+../libraries/Src/user_math.c:31:15:MIN	3
+../libraries/Src/user_math.c:46:15:MAX	3

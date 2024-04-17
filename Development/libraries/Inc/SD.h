@@ -11,16 +11,16 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-uint8_t is_sd_card_mounted(void);
+uint8_t IsSDCardMounted(void);
 
 void updateLogFile(const char* TAG, const char* InfoString);
 
 bool isFileExist(const char* filename);
 
-void SDCard_Init(void);
+void SDCardInit(void);
 
-void CharaExtendedCSVFile_Create(void);
+void UARTExtendedStreamCSVCreate(void);
 
-void SD_Card_Test(void);
+void UARTSDExtendedStreamWrite(void);
 
 #endif /* INC_SD_H_ */

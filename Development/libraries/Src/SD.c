@@ -66,7 +66,7 @@ static bool sdInitialized = false;
                                           FUNCTION DEFINITIONS
  *****************************************************************************************************/
 /*****************************************************************************************************
- * @fn									- is_sd_card_mounted
+ * @fn									- IsSDCardMounted
  *
  * @brief								- This function will be used to check the file-System mounted
  *
@@ -76,7 +76,7 @@ static bool sdInitialized = false;
  *
  * @note								- None
  ******************************************************************************************************/
-uint8_t is_sd_card_mounted(void) {
+uint8_t IsSDCardMounted(void) {
 	// Check if the File system is mounted
 	if (f_mount(&FatFs, "", 1) == FR_OK) {
 		// File system mounted successfully
@@ -139,7 +139,7 @@ bool isFileExist(const char* filename) {
 	return true;	// File already exist
 }
 /*****************************************************************************************************
- * @fn									- SDCard_Init
+ * @fn									- SDCardInit
  *
  * @brief								- This function will be used to Initialise SD card and calculate
  * 										  respective total volume size and free space in volume
@@ -150,7 +150,7 @@ bool isFileExist(const char* filename) {
  *
  * @note								- None
  ******************************************************************************************************/
-void SDCard_Init(void)
+void SDCardInit(void)
 {
 	do
 	{
@@ -172,8 +172,19 @@ void SDCard_Init(void)
 		}
 	} while(0);
 }
-
-void CharaExtendedCSVFile_Create(void)
+/*****************************************************************************************************
+ * @fn									- UARTExtendedStreamCSVCreate
+ *
+ * @brief								- This function will be used to create a file for extended
+ * 										  UART Stream format
+ *
+ * @param[None]							- None
+ *
+ * @return								- None
+ *
+ * @note								- None
+ ******************************************************************************************************/
+void UARTExtendedStreamCSVCreate(void)
 {
 
 	strcpy(Filename, "DATA0000.csv");
@@ -216,8 +227,19 @@ void CharaExtendedCSVFile_Create(void)
 		sdInitialized = true;
 	}
 }
-
-void SD_Card_Test(void) {
+/*****************************************************************************************************
+ * @fn									- UARTSDExtendedStreamWrite
+ *
+ * @brief								- This function will be used to create a file for extended
+ * 										  UART Stream format
+ *
+ * @param[None]							- None
+ *
+ * @return								- None
+ *
+ * @note								- None
+ ******************************************************************************************************/
+void UARTSDExtendedStreamWrite(void) {
 
 	// Define local variables
 	FIL csv_File;   // File object
@@ -253,7 +275,6 @@ void SD_Card_Test(void) {
 	{
 		// Write Error handler function
 	}
-
 
 }
 

@@ -19,7 +19,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "tim.h"
-
+#include "SD.h"
 /* USER CODE BEGIN 0 */
 #define CALLBACK_10MS		10
 #define CALLBACK_20MS		20
@@ -237,7 +237,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
 		else if(cnt20MS >= CALLBACK_20MS)
 		{
 			// 20MS Callback
-			SD_Card_Test();
+			UARTSDExtendedStreamWrite();
 			cnt20MS = 0;
 		}
 		else if(cnt100MS >= CALLBACK_100MS)

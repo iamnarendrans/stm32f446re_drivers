@@ -5,6 +5,9 @@
  *      Author: iamna
  */
 
+/*****************************************************************************************************
+                                                INCLUDES
+ *****************************************************************************************************/
 #include "SD.h"
 #include <stdio.h>
 #include <string.h>
@@ -12,20 +15,68 @@
 #include "fatfs.h"
 #include "user_helper.h"
 #include "userconfig.h"
+/*****************************************************************************************************/
+//----------------------------------------------------------------------------------------------------/
+/*****************************************************************************************************
+                                                 MACROS
+ *****************************************************************************************************/
 
+
+/*****************************************************************************************************/
+//----------------------------------------------------------------------------------------------------/
+
+
+/*****************************************************************************************************
+                                          STRUCTURES AND ENUMS
+ *****************************************************************************************************/
 FATFS 	FatFs;
 FIL 	File;
 FRESULT FR_Status;
 FATFS	*FS_Ptr;
 UINT	RWC, WWC; //Read, Write word counter
 DWORD	FreeClusters;
+/*****************************************************************************************************/
+//----------------------------------------------------------------------------------------------------/
+
+
+/*****************************************************************************************************
+                                          FUNCTION PROTOTYPES
+ *****************************************************************************************************/
+
+
+/*****************************************************************************************************/
+//----------------------------------------------------------------------------------------------------/
+
+
+/*****************************************************************************************************
+                                           VARIABLE DECLARATIONS
+ *****************************************************************************************************/
 uint32_t TotalSize, FreeSpace;
 char	RW_Buff[200];
-char TxBuffer[500];
+char 	TxBuffer[500];
+char 	Filename[15];
+int32_t iTxArr[70];
 static bool sdInitialized = false;
 
-// Function to check if the SD card is mounted
-int is_sd_card_mounted(void) {
+/*****************************************************************************************************/
+//----------------------------------------------------------------------------------------------------/
+
+
+/*****************************************************************************************************
+                                          FUNCTION DEFINITIONS
+ *****************************************************************************************************/
+/*****************************************************************************************************
+ * @fn									- is_sd_card_mounted
+ *
+ * @brief								- This function will be used to check the file-System mounted
+ *
+ * @param[None]							- None
+ *
+ * @return								- uint8_t : if mounted, return 1 else return 0
+ *
+ * @note								- None
+ ******************************************************************************************************/
+uint8_t is_sd_card_mounted(void) {
 	// Check if the File system is mounted
 	if (f_mount(&FatFs, "", 1) == FR_OK) {
 		// File system mounted successfully
@@ -35,30 +86,47 @@ int is_sd_card_mounted(void) {
 		return 0;
 	}
 }
-
-
+/*****************************************************************************************************
+ * @fn									- updateLogFile
+ *
+ * @brief								- This function will be used to update log.txt file in every reset
+ *
+ * @param[None]							- None
+ *
+ * @return								- None
+ *
+ * @note								- None
+ ******************************************************************************************************/
 void updateLogFile(const char* TAG, const char* InfoString)
 {
-    FIL File;
-    FRESULT FR_Status;
-    char txBuff[250];
-    // Open the file in append mode
-    FR_Status = f_open(&File, "log.txt", FA_OPEN_ALWAYS | FA_WRITE | FA_OPEN_APPEND);
-    if (FR_Status != FR_OK) {
+	FIL File;
+	FRESULT FR_Status;
+	char txBuff[250];
+	// Open the file in append mode
+	FR_Status = f_open(&File, "log.txt", FA_OPEN_ALWAYS | FA_WRITE | FA_OPEN_APPEND);
+	if (FR_Status != FR_OK) {
 
-        sprintf(TxBuffer, "Error! While Opening File For Update.. \r\n");
-        UART_Print(TxBuffer);
-        return;
-    }
+		// Write Error handler
+		return;
+	}
 
-    // Write information to the file
-    sprintf(txBuff, "%s: %s\r\n", TAG, InfoString);
-    f_puts(txBuff, &File);
-    f_close(&File);
+	// Write information to the file
+	sprintf(txBuff, "%s: %s\r\n", TAG, InfoString);
+	f_puts(txBuff, &File);
+	f_close(&File);
 
 }
-
-
+/*****************************************************************************************************
+ * @fn									- isFileExist
+ *
+ * @brief								- This function will be used to check the file exist or not
+ *
+ * @param[None]							- None
+ *
+ * @return								- bool - true/false
+ *
+ * @note								- None
+ ******************************************************************************************************/
 bool isFileExist(const char* filename) {
 	FILINFO fno; // Gathering file info, if not needed keep it NULL
 	FRESULT fr;
@@ -70,49 +138,45 @@ bool isFileExist(const char* filename) {
 
 	return true;	// File already exist
 }
-
+/*****************************************************************************************************
+ * @fn									- SDCard_Init
+ *
+ * @brief								- This function will be used to Initialise SD card and calculate
+ * 										  respective total volume size and free space in volume
+ *
+ * @param[None]							- None
+ *
+ * @return								- bool - true/false
+ *
+ * @note								- None
+ ******************************************************************************************************/
 void SDCard_Init(void)
 {
-#if UART_ENABLED == 1
 	do
 	{
 		//----------------------------------[ Mount The SD Card ]----------------------------------------
 		FR_Status = f_mount(&FatFs, "", 1);
 		if (FR_Status != FR_OK)
 		{
-			sprintf(TxBuffer, "Error! While Mounting SD Card, Error Code: (%i)\r\n", FR_Status);
-			UART_Print(TxBuffer);
+			// Write an Error Handler Function
 			break;
 		}
-		sdInitialized = true;
-		sprintf(TxBuffer, "SD Card Mounted Successfully! \r\n\n");
-		UART_Print(TxBuffer);
 		//-----------------------------[ Get & Print The SD Card Size & Free Space ]--------------------
 		f_getfree("", &FreeClusters, &FS_Ptr);
 		TotalSize = (uint32_t)((FS_Ptr->n_fatent - 2) * FS_Ptr->csize * 0.5);
 		FreeSpace = (uint32_t)(FreeClusters * FS_Ptr->csize * 0.5);
 		//----------------------------------------------------------------------------------------------
+		for (int i = 0; i < 70; i++)
+		{
+			iTxArr[i] = INT32_MAX;
+		}
 	} while(0);
-#else
-	// Execute the remaining lines if UART is not enabled
-	FR_Status = f_mount(&FatFs, "", 1);
-	if (FR_Status != FR_OK)
-	{
-		// Handle the error
-	}
-	//-----------------------------[ Get & Print The SD Card Size & Free Space ]--------------------
-	f_getfree("", &FreeClusters, &FS_Ptr);
-	TotalSize = (uint32_t)((FS_Ptr->n_fatent - 2) * FS_Ptr->csize * 0.5);
-	FreeSpace = (uint32_t)(FreeClusters * FS_Ptr->csize * 0.5);
-	//----------------------------------------------------------------------------------------------
-#endif
 }
 
 void CharaExtendedCSVFile_Create(void)
 {
-	char Filename[15];
-	char fieldStr[10];
-	strcpy(Filename, "data0000.csv");
+
+	strcpy(Filename, "DATA0000.csv");
 
 	for(uint16_t i = 0; i < SD_NUM_OF_FILES; i++)
 	{
@@ -120,14 +184,12 @@ void CharaExtendedCSVFile_Create(void)
 		Filename[5] = '0' + i / 100; // Hundreds digit
 		Filename[6] = '0' + i / 10; // Tens digit
 		Filename[7] = '0' + i % 10; // Ones digit
-
 		// Check if the file already exists
 		if(!isFileExist(Filename))
 		{
 			break;
 		}
 	}
-
 	// Check if the SD card is mounted
 	if (is_sd_card_mounted())
 	{
@@ -136,19 +198,12 @@ void CharaExtendedCSVFile_Create(void)
 		{
 			for(uint8_t i = 0; i < SD_NUM_COLUMNS; i++)
 			{
-				sprintf(fieldStr, "field%d", i+1);
+				f_printf(&File, "field%d,", i+1);
 
-				// Write field string to the file
-				f_puts(fieldStr, &File);
-
-				if(i < SD_NUM_COLUMNS - 1) // Corrected the condition to avoid writing extra comma
-				{
-					// Write comma if it's not the last field
-					f_puts(",", &File);
-				}
 			}
 
 			// Write a new line character
+			f_puts("rowcount", &File);
 			f_puts("\n", &File);
 
 			// Close the file
@@ -158,13 +213,11 @@ void CharaExtendedCSVFile_Create(void)
 		//--------------------------[ Open An Existing log.txt File, Update Its Content]-----------------------
 		sprintf(TxBuffer, "The %s has been created.Total size and free space are %ld and %ld, respectively", Filename, TotalSize, FreeSpace);
 		updateLogFile("INFO", TxBuffer);
+		sdInitialized = true;
 	}
 }
 
-
-
 void SD_Card_Test(void) {
-//	HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
 
 	// Define local variables
 	FIL csv_File;   // File object
@@ -172,34 +225,47 @@ void SD_Card_Test(void) {
 
 	// Check if the SD card is mounted
 	if (sdInitialized  == true)
-	{ // You need to define this function
+	{
 		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, SET);
 		// Open the CSV File
-		if (f_open(&csv_File, "data.csv", FA_OPEN_ALWAYS | FA_WRITE) == FR_OK)
+		if (f_open(&csv_File, Filename, FA_OPEN_APPEND | FA_WRITE) == FR_OK)
 		{
-			// Move to the end of the File
-			f_lseek(&csv_File, f_size(&csv_File));
-
 			// Write the count to the File
-			f_printf(&csv_File, "%lu\n", sd_count);
-//			sprintf(TxBuffer, "The corresponding count %ld\r\n", sd_count);
-//			UART_Print(TxBuffer);
+			for(uint8_t i = 0; i < SD_NUM_COLUMNS; i++)
+			{
+
+				f_printf(&csv_File, "%ld,", iTxArr[i]);
+
+			}
+
+			f_printf(&csv_File, "%ld\n", sd_count + 1);
 
 			// Close the File
 			f_close(&csv_File);
 		} else
 		{
-//			 UART_Print("Error: Unable to open the File.\r\n");
+			// Write Error handler function
 		}
+		sd_count++;
 		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, RESET);
 	}
 	else
 	{
-//		 UART_Print("Error: SD card not mounted.\r\n");
+		// Write Error handler function
 	}
-
-	sd_count++;
 
 
 }
+
+/*****************************************************************************************************/
+//----------------------------------------------------------------------------------------------------/
+
+
+/*####################################################################################################
+####################################################################################################*/
+
+
+
+
+
 

@@ -9,8 +9,9 @@
 #define INC_SD_H_
 
 #include <stdbool.h>
+#include <stdint.h>
 
-int is_sd_card_mounted(void);
+uint8_t is_sd_card_mounted(void);
 
 void updateLogFile(const char* TAG, const char* InfoString);
 

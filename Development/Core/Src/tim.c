@@ -19,7 +19,6 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "tim.h"
-#include "SD.h"
 
 /* USER CODE BEGIN 0 */
 #define CALLBACK_10MS		10

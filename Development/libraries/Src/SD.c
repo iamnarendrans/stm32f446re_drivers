@@ -202,7 +202,7 @@ void UARTExtendedStreamCSVCreate(void)
 		}
 	}
 	// Check if the SD card is mounted
-	if (is_sd_card_mounted())
+	if (IsSDCardMounted())
 	{
 		// Open the CSV File
 		if (f_open(&File, Filename, FA_OPEN_ALWAYS | FA_WRITE) == FR_OK)
@@ -242,38 +242,44 @@ void UARTExtendedStreamCSVCreate(void)
 void UARTSDExtendedStreamWrite(void) {
 
 	// Define local variables
-	FIL csv_File;   // File object
 	static uint32_t sd_count = 0;
 
 	// Check if the SD card is mounted
 	if (sdInitialized  == true)
 	{
 		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, SET);
+
 		// Open the CSV File
-		if (f_open(&csv_File, Filename, FA_OPEN_APPEND | FA_WRITE) == FR_OK)
+		if (f_open(&File, Filename, FA_OPEN_APPEND | FA_WRITE) == FR_OK)
 		{
+
+
 			// Write the count to the File
 			for(uint8_t i = 0; i < SD_NUM_COLUMNS; i++)
 			{
 
-				f_printf(&csv_File, "%ld,", iTxArr[i]);
+				f_printf(&File, "%ld,", iTxArr[i]);
 
 			}
 
-			f_printf(&csv_File, "%ld\n", sd_count + 1);
+			f_printf(&File, "%ld\n", sd_count + 1);
+
+
+			sd_count++;
 
 			// Close the File
-			f_close(&csv_File);
-		} else
-		{
-			// Write Error handler function
+			f_close(&File);
+
 		}
-		sd_count++;
+
 		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, RESET);
-	}
-	else
-	{
-		// Write Error handler function
+
+		if(sd_count == SD_FILE_MAX_ROW)
+		{
+			UARTExtendedStreamCSVCreate();
+			sd_count = 0;
+		}
+
 	}
 
 }

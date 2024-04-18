@@ -1,6 +1,6 @@
-../libraries/Src/SD.c:79:9:is_sd_card_mounted	2
+../libraries/Src/SD.c:79:9:IsSDCardMounted	2
 ../libraries/Src/SD.c:100:6:updateLogFile	2
 ../libraries/Src/SD.c:130:6:isFileExist	2
-../libraries/Src/SD.c:153:6:SDCard_Init	3
-../libraries/Src/SD.c:176:6:CharaExtendedCSVFile_Create	6
-../libraries/Src/SD.c:220:6:SD_Card_Test	4
+../libraries/Src/SD.c:153:6:SDCardInit	3
+../libraries/Src/SD.c:187:6:UARTExtendedStreamCSVCreate	6
+../libraries/Src/SD.c:242:6:UARTSDExtendedStreamWrite	5

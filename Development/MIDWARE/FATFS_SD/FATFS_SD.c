@@ -1,12 +1,9 @@
 /*
  * File: FATFS_SD.c
  * Driver Name: [[ FATFS_SD SPI ]]
- * SW Layer:   MIDWARE
- * Author:     Khaled Magdy
  * -------------------------------------------
- * For More Information, Tutorials, etc.
- * Visit Website: www.DeepBlueMbedded.com
  */
+
 #include "main.h"
 #include "diskio.h"
 #include "FATFS_SD.h"

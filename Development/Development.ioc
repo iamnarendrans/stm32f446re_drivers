@@ -2,8 +2,7 @@
 CAD.formats=[{"id"\:0,"cad_product"\:"Altium Designer","cad_family"\:"Altium"}]
 CAD.pinconfig=Dual
 CAD.provider=
-FATFS.IPParameters=_USE_LFN,_MAX_SS,_FS_MINIMIZE
-FATFS._FS_MINIMIZE=0
+FATFS.IPParameters=_USE_LFN,_MAX_SS
 FATFS._MAX_SS=4096
 FATFS._USE_LFN=1
 File.Version=6

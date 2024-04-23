@@ -11,8 +11,6 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-uint8_t IsSDCardMounted(void);
-
 void updateLogFile(const char* TAG, const char* InfoString);
 
 bool isFileExist(const char* filename);

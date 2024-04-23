@@ -239,6 +239,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
 		{
 			// 20MS Callback
 			UARTSDExtendedStreamWrite();
+			HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_6);
 			cnt20MS = 0;
 		}
 		else if(cnt100MS >= CALLBACK_100MS)

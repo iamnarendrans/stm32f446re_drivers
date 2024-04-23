@@ -92,8 +92,6 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-	//	uint8_t msg[35] = {'\0'};
-	//	uint8_t x = 0;
 
   /* USER CODE END 1 */
 

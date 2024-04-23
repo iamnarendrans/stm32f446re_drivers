@@ -1,6 +1,7 @@
-../libraries/Src/SD.c:79:9:IsSDCardMounted	2
+../libraries/Src/SD.c:79:16:IsSDCardMounted	2
 ../libraries/Src/SD.c:100:6:updateLogFile	2
 ../libraries/Src/SD.c:130:6:isFileExist	2
-../libraries/Src/SD.c:153:6:SDCardInit	3
-../libraries/Src/SD.c:187:6:UARTExtendedStreamCSVCreate	6
-../libraries/Src/SD.c:242:6:UARTSDExtendedStreamWrite	5
+../libraries/Src/SD.c:152:13:calculateCardSizeDetails	1
+../libraries/Src/SD.c:170:6:SDCardInit	3
+../libraries/Src/SD.c:202:6:UARTExtendedStreamCSVCreate	6
+../libraries/Src/SD.c:260:6:UARTSDExtendedStreamWrite	5
